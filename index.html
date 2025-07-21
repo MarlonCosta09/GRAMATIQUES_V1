@@ -1,0 +1,2427 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRAMATIQUÊS - Prática de Gramática Portuguesa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f0f0; /* Cinza claro sólido */
+        }
+        .title-font {
+            font-family: 'Roboto Slab', serif;
+        }
+        .option-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .correct {
+            background-color: #22c55e !important; /* green-500 */
+            color: white !important;
+            border-color: #16a34a; /* green-600 */
+            transform: scale(1.02);
+        }
+        .incorrect {
+            background-color: #ef4444 !important; /* red-500 */
+            color: white !important;
+            border-color: #dc2626; /* red-600 */
+        }
+        .disabled {
+            pointer-events: none;
+            opacity: 0.9;
+        }
+        .topic-card {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+        #topic-list {
+            column-count: 1;
+        }
+        @media (min-width: 768px) {
+            #topic-list {
+                column-count: 2;
+            }
+        }
+        /* Estilos para o Modal */
+        .modal-overlay {
+            transition: opacity 0.3s ease;
+        }
+        .modal-container {
+            transition: all 0.3s ease;
+            /* Ajustes para o tamanho e rolagem dos modais */
+            max-height: 90vh; /* Limita a altura máxima para caber na tela */
+            overflow-y: auto; /* Adiciona rolagem vertical se o conteúdo exceder a altura */
+        }
+        /* Estilos para o spinner */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #3b82f6; /* blue-500 */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Estilo para o popup de informações */
+        .info-popup {
+            position: absolute;
+            bottom: 1.5rem; /* Ajustado para descer mais */
+            right: 0.5rem; /* Mantido no canto direito */
+            background-color: #fff;
+            padding: 0.6rem 0.8rem; /* Reduzido em aproximadamente 20% */
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 0.7rem; /* Reduzido em aproximadamente 20% */
+            color: #475569; /* slate-600 */
+            z-index: 50; /* Garante que fique acima de outros elementos */
+        }
+        /* Ajuste para a tela inicial para permitir posicionamento absoluto do popup */
+        #home-screen {
+            position: relative; /* Necessário para posicionar o popup absolutamente dentro dela */
+            overflow: hidden; /* Para garantir que o fundo de texto não vaze */
+        }
+        /* Estilo para o fundo de texto transparente */
+        .text-background-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Permite cliques nos elementos abaixo */
+            z-index: 1; /* Garante que fique atrás do conteúdo principal */
+            color: rgba(200, 200, 200, 0.15); /* Cinza muito claro com mais transparência */
+            font-size: 1.8rem; /* Ligeiramente maior */
+            line-height: 1.8;
+            text-align: center;
+            overflow: hidden;
+            word-break: break-all;
+            white-space: pre-wrap; /* Preserva espaços em branco e quebras de linha */
+            user-select: none; /* Impede seleção de texto */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05); /* Sombra sutil para efeito 3D */
+            background-image: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 100px,
+                rgba(220, 220, 220, 0.05) 100px, /* Ajuste para mais transparência no gradiente também */
+                rgba(220, 220, 220, 0.05) 200px
+            );
+        }
+        /* Estilo para o ícone do professor no modal */
+        .professor-icon {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+            color: #1d4ed8; /* blue-700 */
+        }
+        /* Estilo para o ícone de ajuda */
+        .help-icon {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+            color: #fff; /* white */
+        }
+        /* Estilo para o iframe do YouTube */
+        .video-responsive {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            border-radius: 0.5rem;
+        }
+        .video-responsive iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .difficulty-label.selected {
+            background-color: #3b82f6; /* blue-500 */
+            color: white;
+            border-color: #3b82f6;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex items-center justify-center min-h-screen p-4">
+
+    <div id="app-container" class="w-full max-w-4xl mx-auto">
+        
+        <!-- Tela Inicial (Home Screen) -->
+        <div id="home-screen" class="text-center">
+            <!-- Fundo de texto transparente -->
+            <div class="text-background-overlay">
+                Gramática Morfologia Sintaxe Fonética Fonologia Acentuação Ortografia Hífen Fonemas Encontros Vocálicos Substantivo Adjetivo Verbo Artigo Pronome Advérbio Preposição Conjunção Numeral Interjeição Morfema Termos Essenciais Sujeito Predicado Termos Integrantes Objeto Direto Objeto Indireto Complemento Nominal Agente da Passiva Termos Acessórios Adjunto Adnominal Adjunto Adverbial Aposto Vocativo Concordância Verbal Concordância Nominal Regência Verbal Regência Nominal Transitividade Verbal Vozes do Verbo Voz Ativa Voz Passiva Voz Reflexiva Uso da Vírgula Crase Orações Reduzidas Colocação Pronominal Funções do Que e Se Pontuação Português Língua Portuguesa Estudo Prática Aprender Conhecimento
+            </div>
+
+            <!-- Popup de informações do professor -->
+            <!-- Removido ou ocultado conforme solicitação do usuário -->
+            <!-- <div class="info-popup">
+                <p class="text-xs text-slate-500">Desenvolvido por:</p>
+                <p class="font-semibold">Prof. Marlon Costa</p>
+                <p class="text-xs text-slate-500">Língua Portuguesa e Literatura</p>
+            </div> -->
+
+            <header class="mb-10 relative z-10">
+                <h1 class="text-5xl md:text-6xl font-bold text-slate-700 title-font">GRAMATIQUÊS</h1>
+                <p class="text-slate-500 mt-2 text-lg">Aprenda e pratique a gramática portuguesa de forma divertida!</p>
+            </header>
+            <main class="flex justify-center items-center h-64 relative z-10">
+                <!-- Ícone SVG com corte lateral no primeiro círculo -->
+                <svg class="w-48 h-48 text-sky-600 drop-shadow-lg" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Círculo externo com corte lateral -->
+                    <path d="M 18 4 A 10 10 0 1 0 18 20" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <!-- Círculo interno -->
+                    <circle cx="12" cy="12" r="5" fill="currentColor"/>
+                </svg>
+            </main>
+            <div class="mt-8 relative z-10">
+                <h3 class="text-2xl font-bold text-slate-700 mb-4">Selecione seu nível:</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 max-w-2xl mx-auto">
+                    <button id="level-6ef" class="level-select-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-lg" data-level="6EF">
+                        6º Ano (Ensino Fundamental)
+                    </button>
+                    <button id="level-7ef" class="level-select-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-lg" data-level="7EF">
+                        7º Ano (Ensino Fundamental)
+                    </button>
+                    <button id="level-8ef" class="level-select-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-lg" data-level="8EF">
+                        8º Ano (Ensino Fundamental)
+                    </button>
+                    <button id="level-9ef" class="level-select-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-lg" data-level="9EF">
+                        9º Ano (Ensino Fundamental)
+                    </button>
+                    <button id="level-1em" class="level-select-btn bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-lg" data-level="1EM">
+                        1º Ano (Ensino Médio)
+                    </button>
+                    <button id="level-2em" class="level-select-btn bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-lg" data-level="2EM">
+                        2º Ano (Ensino Médio)
+                    </button>
+                    <button id="level-3em" class="level-select-btn bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-lg" data-level="3EM">
+                        3º Ano (Ensino Médio)
+                    </button>
+                    <button id="level-enem" class="level-select-btn bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-lg" data-level="enem">
+                        ENEM
+                    </button>
+                </div>
+                <button id="enter-app-btn" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-lg opacity-50 cursor-not-allowed" disabled>
+                    Iniciar
+                </button>
+            </div>
+            <footer class="mt-8 relative z-10 text-xs text-slate-500">
+                <p>Desenvolvido por: Prof.º Marlon Costa - Língua Portuguesa e Literatura / Gramatiquês Versão 1.0</p>
+            </footer>
+        </div>
+
+        <!-- Tela de Seleção de Tópico (para níveis não-concurseiro) -->
+        <div id="topic-selection-screen" class="hidden">
+            <header class="text-center mb-10">
+                <h1 class="text-5xl md:text-6xl font-bold text-slate-700 title-font">GRAMATIQUÊS</h1>
+                <p class="text-slate-500 mt-2 text-lg">Selecione um ou mais tópicos para estudar ou praticar.</p>
+            </header>
+            <main id="topic-container-quiz" class="space-y-8">
+                <!-- Categorias e Tópicos serão inseridos aqui -->
+            </main>
+            <footer class="mt-8 text-center flex flex-col sm:flex-row justify-center items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <label for="question-quantity-quiz" class="text-slate-700 font-semibold">Questões:</label>
+                    <input type="number" id="question-quantity-quiz" value="10" min="1" class="w-20 p-2 border border-slate-300 rounded-lg text-center">
+                </div>
+                <button id="start-selected-quiz" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-lg opacity-50 cursor-not-allowed" disabled>
+                    Iniciar Quiz com Tópicos Selecionados
+                </button>
+                <!-- Novo botão para voltar à tela inicial -->
+                <button id="back-to-home-from-topics" class="bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold py-3 px-6 rounded-lg transition-colors">
+                    Voltar para o Início
+                </button>
+            </footer>
+        </div>
+
+        <!-- Tela de Configuração do Simulado (para nível Concurseiro) -->
+        <div id="simulado-setup-screen" class="hidden">
+            <header class="text-center mb-10">
+                <h1 class="text-5xl md:text-6xl font-bold text-slate-700 title-font">SIMULADO GRAMATIQUÊS</h1>
+                <p class="text-slate-500 mt-2 text-lg">Selecione os tópicos e a quantidade de questões para o seu simulado.</p>
+            </header>
+            <main id="topic-container-simulado" class="space-y-8">
+                <!-- Categorias e Tópicos serão inseridos aqui -->
+            </main>
+            <footer class="mt-8 text-center flex flex-col sm:flex-row justify-center items-center gap-4">
+                <div class="flex items-center gap-2 mb-4 sm:mb-0">
+                    <label for="question-quantity-simulado" class="text-slate-700 font-semibold">Questões:</label>
+                    <input type="number" id="question-quantity-simulado" value="10" min="1" class="w-20 p-2 border border-slate-300 rounded-lg text-center">
+                </div>
+                <div class="flex items-center gap-2 mb-4 sm:mb-0">
+                    <label class="text-slate-700 font-semibold">Dificuldade:</label>
+                    <div class="flex gap-2">
+                        <input type="radio" id="difficulty-facil" name="difficulty" value="facil" class="hidden">
+                        <label for="difficulty-facil" class="difficulty-label px-4 py-2 border border-slate-300 rounded-lg cursor-pointer hover:bg-slate-200 transition-colors text-slate-700">Fácil</label>
+                        <input type="radio" id="difficulty-medio" name="difficulty" value="medio" class="hidden">
+                        <label for="difficulty-medio" class="difficulty-label px-4 py-2 border border-slate-300 rounded-lg cursor-pointer hover:bg-slate-200 transition-colors text-slate-700">Médio</label>
+                        <input type="radio" id="difficulty-dificil" name="difficulty" value="dificil" class="hidden">
+                        <label for="difficulty-dificil" class="difficulty-label px-4 py-2 border border-slate-300 rounded-lg cursor-pointer hover:bg-slate-200 transition-colors text-slate-700">Difícil</label>
+                    </div>
+                </div>
+                <button id="start-simulado" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-lg opacity-50 cursor-not-allowed" disabled>
+                    Iniciar Simulado
+                </button>
+                <!-- Botão para voltar à tela inicial do simulado -->
+                <button id="back-to-home-from-simulado-setup" class="bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold py-3 px-6 rounded-lg transition-colors">
+                    Voltar para o Início
+                </button>
+            </footer>
+        </div>
+
+        <!-- Tela do Quiz -->
+        <div id="quiz-screen" class="hidden">
+            <header class="mb-8 p-4 bg-white rounded-xl shadow-md max-w-2xl mx-auto">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h2 id="quiz-topic-title" class="text-2xl font-bold text-sky-700"></h2>
+                        <p id="question-counter" class="text-slate-500"></p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-slate-500">Pontuação</p>
+                        <p id="score" class="text-2xl font-bold text-slate-700">0</p>
+                    </div>
+                </div>
+                <!-- Timer para Simulado -->
+                <div id="timer-display-container" class="text-center text-lg font-semibold text-slate-700 mb-4 hidden">
+                    Tempo: <span id="timer-display">00:00</span>
+                </div>
+                <!-- Barra de Progresso -->
+                <div class="w-full bg-slate-200 rounded-full h-2.5">
+                    <div id="progress-bar" class="bg-sky-500 h-2.5 rounded-full transition-all duration-300 ease-out" style="width: 0%;"></div>
+                </div>
+            </header>
+
+            <main id="question-container" class="bg-white p-6 md:p-8 rounded-xl shadow-md max-w-2xl mx-auto">
+                <div id="loading-area" class="flex flex-col justify-center items-center h-40 hidden">
+                    <div class="spinner mb-2"></div>
+                    <p id="loading-text" class="text-slate-600 font-semibold">Gerando Questões...</p>
+                </div>
+                <div id="quiz-content">
+                    <p id="question-text" class="text-lg md:text-xl mb-6 min-h-[60px]"></p>
+                    <div id="options-container" class="flex flex-col space-y-3">
+                        <!-- Opções serão inseridas aqui -->
+                    </div>
+                </div>
+            </main>
+
+            <footer class="mt-6 flex flex-wrap justify-center items-center gap-4 max-w-2xl mx-auto">
+                <button id="back-to-menu" class="bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold py-2 px-4 rounded-lg transition-colors">
+                    Menu
+                </button>
+                <!-- Botão "Perguntar ao Gramatiquinho" (visível apenas para quizzes normais) -->
+                <button id="ask-friends-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors shadow-lg flex items-center">
+                    <span class="help-icon">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                    </span> Perguntar ao Gramatiquinho (<span id="friends-help-count">3</span>)
+                </button>
+                <!-- Botão "Recurso da Questão" -->
+                <button id="appeal-question-btn" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition-colors shadow-lg flex items-center hidden">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                    </svg>
+                    Recurso da Questão
+                </button>
+                <button id="next-question" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-lg hidden">
+                    Próxima Pergunta &rarr;
+                </button>
+                <!-- Botão de Mudo -->
+                <button id="mute-button" class="bg-slate-500 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded-lg transition-colors shadow-lg flex items-center justify-center w-12 h-12">
+                    <svg id="unmute-icon" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM19 12c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.1 14.63 20.5 13.38 20.5 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71z"/>
+                    </svg>
+                    <svg id="mute-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.1 14.63 20.5 13.38 20.5 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27l9 9V17h-2v4h4v-7.5l7.73 7.73L22 20.73 4.27 3zM9 17v-4.58l.48.48 2.08 2.08H9z"/>
+                    </svg>
+                </button>
+            </footer>
+        </div>
+
+        <!-- Tela Final -->
+        <div id="final-screen" class="hidden text-center bg-white p-8 rounded-xl shadow-md max-w-2xl mx-auto">
+            <h2 class="text-3xl font-bold text-slate-700 mb-2">Quiz Finalizado!</h2>
+            <p id="final-topic" class="text-xl text-sky-700 font-semibold mb-4"></p>
+            <p class="text-lg text-slate-600 mb-1">Sua pontuação final foi:</p>
+            <p id="final-score" class="text-6xl font-bold text-slate-800 mb-4"></p>
+            <p id="final-time" class="text-lg text-slate-600 mb-8 hidden"></p> <!-- Tempo final do simulado -->
+            <div class="flex flex-wrap justify-center gap-4">
+                <button id="restart-quiz" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                    Tentar Novamente
+                </button>
+                <button id="back-to-menu-final" class="bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold py-3 px-6 rounded-lg transition-colors">
+                    Escolher outro Tópico
+                </button>
+                <!-- Novo botão para voltar à tela inicial -->
+                <button id="back-to-home-from-final" class="bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold py-3 px-6 rounded-lg transition-colors">
+                    Voltar à Tela Inicial
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal de Estudo (antigo Modal de Explicação) -->
+    <div id="study-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50 opacity-0" role="dialog" aria-modal="true" aria-labelledby="study-title">
+        <div class="modal-container bg-white w-full max-w-md rounded-xl shadow-2xl p-6 md:p-8 relative transform scale-95 opacity-0">
+            <h3 id="study-title" class="text-2xl font-bold text-sky-700 mb-4">
+                <span class="professor-icon">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                </span> Estudar: <span id="study-modal-title-text"></span>
+            </h3>
+            <!-- Novo wrapper para o conteúdo e o spinner -->
+            <div id="study-content-wrapper">
+                <div id="study-loading-area" class="flex flex-col justify-center items-center h-40 hidden">
+                    <div class="spinner mb-2"></div>
+                    <p class="text-slate-600 font-semibold">Carregando material de estudo...</p>
+                </div>
+                <div id="study-text" class="text-slate-600 space-y-3 prose max-w-none hidden">
+                    <!-- Conteúdo de estudo será carregado aqui -->
+                </div>
+            </div>
+            <button id="close-study-modal" class="absolute top-4 right-4 text-slate-500 hover:text-slate-800 transition-colors" aria-label="Fechar explicação">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal de Recurso da Questão -->
+    <div id="appeal-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50 opacity-0" role="dialog" aria-modal="true" aria-labelledby="appeal-title">
+        <div class="modal-container bg-white w-full max-w-md rounded-xl shadow-2xl p-6 md:p-8 relative transform scale-95 opacity-0">
+            <h3 id="appeal-title" class="text-2xl font-bold text-orange-700 mb-4">
+                <svg class="w-6 h-6 inline-block mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                </svg>
+                Recurso da Questão
+            </h3>
+            <p class="text-slate-600 mb-4">Explique por que você acredita que a resposta está incorreta ou que sua resposta deveria ser considerada correta.</p>
+            <textarea id="appeal-text-area" class="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 mb-4 h-32 resize-y" placeholder="Digite seu recurso aqui..."></textarea>
+            <div id="appeal-response-container" class="bg-slate-50 p-3 rounded-lg border border-slate-200 hidden">
+                <p class="font-semibold text-slate-700 mb-2">Avaliação do Gramatiquinho:</p>
+                <div id="appeal-response-loading" class="flex justify-center items-center h-16 hidden">
+                    <div class="spinner"></div>
+                </div>
+                <p id="appeal-response-text" class="text-slate-600"></p>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button id="submit-appeal-btn" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-5 rounded-lg transition-colors shadow-lg">
+                    Enviar Recurso
+                </button>
+                <button id="close-appeal-modal-btn" class="bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold py-2 px-5 rounded-lg transition-colors">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Senha -->
+    <div id="password-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50 opacity-0" role="dialog" aria-modal="true" aria-labelledby="password-title">
+        <div class="modal-container bg-white w-full max-w-sm rounded-xl shadow-2xl p-6 md:p-8 relative transform scale-95 opacity-0">
+            <h3 id="password-title" class="text-2xl font-bold text-slate-700 mb-4">Acesso Restrito</h3>
+            <p class="text-slate-600 mb-4">Para continuar, por favor, insira a senha de administrador:</p>
+            <input type="password" id="admin-password-input" class="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 mb-4" placeholder="Senha">
+            <p id="password-error-message" class="text-red-500 text-sm mb-4 hidden">Senha incorreta. Tente novamente.</p>
+            <div class="flex justify-end gap-3 mt-6">
+                <button id="confirm-password-btn" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-5 rounded-lg transition-colors shadow-lg">
+                    Confirmar
+                </button>
+                <button id="cancel-password-btn" class="bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold py-2 px-5 rounded-lg transition-colors">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Novo Modal de Distribuição de Questões -->
+    <div id="question-distribution-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50 opacity-0" role="dialog" aria-modal="true" aria-labelledby="distribution-title">
+        <div class="modal-container bg-white w-full max-w-md rounded-xl shadow-2xl p-6 md:p-8 relative transform scale-95 opacity-0">
+            <h3 id="distribution-title" class="text-2xl font-bold text-sky-700 mb-4">Distribuir Questões por Tópico</h3>
+            <p class="text-slate-600 mb-4">Defina quantas questões você quer de cada tópico selecionado. O total deve ser <span id="expected-total-questions" class="font-bold"></span>.</p>
+            
+            <div id="question-distribution-container" class="max-h-60 overflow-y-auto pr-2 mb-4 space-y-3">
+                <!-- Inputs para distribuição de questões por tópico serão inseridos aqui -->
+            </div>
+
+            <div class="flex justify-between items-center mb-4">
+                <button id="randomize-distribution-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors shadow-md">
+                    Distribuir Aleatoriamente
+                </button>
+                <p class="text-slate-700 font-semibold">Total Atual: <span id="distribution-total-display" class="font-bold text-sky-700">0</span></p>
+            </div>
+            <p id="distribution-error-message" class="text-red-500 text-sm mb-4 hidden">A soma das questões não corresponde ao total esperado.</p>
+
+            <div class="flex justify-end gap-3 mt-6">
+                <button id="confirm-distribution-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-5 rounded-lg transition-colors shadow-lg opacity-50 cursor-not-allowed" disabled>
+                    Confirmar e Iniciar Simulado
+                </button>
+                <button id="cancel-distribution-btn" class="bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold py-2 px-5 rounded-lg transition-colors">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Novo Modal de Relatório de Desempenho -->
+    <div id="performance-report-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50 opacity-0" role="dialog" aria-modal="true" aria-labelledby="report-title">
+        <div class="modal-container bg-white w-full max-w-md rounded-xl shadow-2xl p-6 md:p-8 relative transform scale-95 opacity-0">
+            <h3 id="report-title" class="text-2xl font-bold text-sky-700 mb-4">Relatório de Desempenho</h3>
+            <div id="performance-report-content" class="text-slate-600 space-y-2 max-h-60 overflow-y-auto pr-2 mb-4">
+                <!-- Conteúdo do relatório será inserido aqui -->
+            </div>
+            <div class="flex justify-end mt-4">
+                <button id="close-report-modal-btn" class="bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold py-2 px-5 rounded-lg transition-colors">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+    <script>
+    // Inicializa os sintetizadores Tone.js no escopo global
+    // Sintetizador para som de "aplauso" (acorde maior rápido)
+    const correctPolySynth = new Tone.PolySynth(Tone.Synth, {
+        oscillator: { type: "sine" },
+        envelope: {
+            attack: 0.01,
+            decay: 0.3,
+            sustain: 0.1,
+            release: 0.5
+        }
+    });
+
+    // Sintetizador para som de "tristeza" (melodia descendente)
+    const incorrectSadSynth = new Tone.Synth({
+        oscillator: { type: "triangle" },
+        envelope: {
+            attack: 0.1, // Ataque mais lento para um início suave
+            decay: 0.4, // Decay mais longo para um som mais sustentado e que se desvanece
+            sustain: 0.1,
+            release: 0.8 // Release mais longo para um efeito de fade out
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // Conecta os sintetizadores ao destino de áudio
+        correctPolySynth.toDestination();
+        incorrectSadSynth.toDestination();
+
+        // --- BANCO DE DADOS DE TÓPICOS E EXPLICAÇÕES (QUESTÕES SERÃO GERADAS PELA IA) ---
+        // Esta estrutura agora contém apenas os metadados dos tópicos e suas explicações.
+        // As questões serão solicitadas dinamicamente à API Gemini.
+        const grammarData = [
+            {
+                category: "Fonética e Fonologia",
+                topics: [
+                    {
+                        id: 'acentuacao', name: 'Acentuação Gráfica', description: 'Regras de oxítonas, paroxítonas e proparoxítonas.',
+                        // IDs reais de vídeos do YouTube sobre Acentuação Gráfica
+                        youtubeVideoId: 'Sy_LUnePfRE', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {   
+                        id: 'ortografia', name: 'Ortografia', description: 'Uso correto de S, Z, G, J, e outras letras.', 
+                        // IDs reais de vídeos do YouTube sobre Ortografia
+                        youtubeVideoId: 'yMzzVuPIt0Q', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>ortografia</span> trata da forma correta de escrever as palavras, seguindo as regras estabelecidas pela norma culta da língua portuguesa.</p>
+                                        <p><strong>Dicas importantes:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Uso de S e Z:</span> Geralmente, usa-se 'S' em substantivos derivados de verbos terminados em '-nder', '-ndir', '-pelir', '-verter' (<span style='color:#059669;'>ex: suspensão, ascensão</span>). Usa-se 'Z' em substantivos derivados de adjetivos (<span style='color:#059669;'>ex: beleza de belo, rapidez de rápido</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Uso de G e J:</b> Usa-se 'G' em palavras de origem grega ou latina (<span style='color:#059669;'>ex: agilidade, gengiva</span>). Usa-se 'J' em palavras de origem tupi, africana ou árabe, ou derivadas de palavras com 'J' (<span style='color:#059669;'>ex: canjica, jiló, lojista de loja</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Palavras com X e CH:</span> Não há uma regra única, mas muitas palavras com 'X' têm som de 'CH' (<span style='color:#059669;'>ex: xícara, enxame</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Parônimos e Homônimos:</span> Atentar para palavras com grafia ou som parecidos, mas significados diferentes (<span style='color:#059669;'>ex: seção, sessão, cessão</span>).</li>
+                                        </ul>`, 
+                    },
+                    {   
+                        id: 'hifen', name: 'Uso do Hífen', description: 'Regras do hífen após o novo acordo ortográfico.', 
+                        // IDs reais de vídeos do YouTube sobre Uso do Hífen
+                        youtubeVideoId: 'NXRMxWQRgd4', 
+                        explanation: `<p>O <span style='color:#1d4ed8; font-weight: bold;'>hífen</span> é um sinal de pontuação utilizado para ligar elementos de palavras compostas, unir pronomes a verbos, e em certas formações com prefixos.</p>
+                                        <p><strong>Principais regras após o Novo Acordo Ortográfico:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Prefixos:</span>
+                                                <ul>
+                                                    <li>Usa-se hífen quando o prefixo termina com a mesma vogal que inicia o segundo elemento (<span style='color:#059669;'>ex: micro-ondas, anti-inflamatório</span>). Exceção: co-, re-, pre-, pro- não usam hífen mesmo com vogais iguais (<span style='color:#059669;'>ex: cooperar, reescrever</span>).</li>
+                                                    <li>Usa-se hífen quando o prefixo termina em vogal e o segundo elemento começa com 'H' (<span style='color:#059669;'>ex: anti-higiênico, super-homem</span>).</li>
+                                                    <li>Não se usa hífen quando o prefixo termina em vogal e o segundo elemento começa com vogal diferente, ou com 'R' ou 'S' (nestes casos, 'R' e 'S' são duplicados). (<span style='color:#059669;'>ex: autoescola, antissocial, ultrassom</span>).</li>
+                                                    <li>Usa-se hífen com prefixos 'além', 'aquém', 'recém', 'sem', 'ex', 'vice', 'soto' (<span style='color:#059669;'>ex: além-mar, recém-nascido, ex-aluno, vice-presidente</span>).</li>
+                                                </ul>
+                                            </li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Palavras Compostas:</span>
+                                                <ul>
+                                                    <li>Mantém-se o hífen em palavras compostas que não perderam a noção de composição (<span style='color:#059669;'>ex: guarda-chuva, couve-flor, bem-estar</span>).</li>
+                                                    <li>Perde-se o hífen em palavras compostas que se aglutinaram (<span style='color:#059669;'>ex: girassol, paraquedas</span>).</li>
+                                                </ul>
+                                            </li>
+                                        </ul>`, 
+                    },
+                    {
+                        id: 'fonemas', name: 'Fonemas', description: 'Estudo dos sons da fala.',
+                        // IDs reais de vídeos do YouTube sobre Fonemas
+                        youtubeVideoId: 'ye40H2aKMLo', 
+                        explanation: `<p><span style='color:#1d4ed8; font-weight: bold;'>Fonema:</span> É a menor unidade sonora da fala capaz de estabelecer diferença de significado entre as palavras. Os fonemas não têm significado por si só, mas distinguem palavras.</p>
+                                        <p><strong>Tipos de Fonemas:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Vogais:</span> Sons produzidos sem obstrução do ar na boca (<span style='color:#059669;'>A, E, I, O, U</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Consoantes:</span> Sons produzidos com alguma obstrução do ar na boca (<span style='color:#059669;'>B, C, D, F, G, etc.</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Semivogais:</span> Sons de 'i' e 'u' que se juntam a uma vogal para formar ditongos ou tritongos, mas não são sílaba tônica (<span style='color:#059669;'>ex: pAI, cAUsa</span>).</li>
+                                        </ul>
+                                        <p><span style='color:#1d4ed8; font-weight: bold;'>Diferença entre Letra e Fonema:</span> Uma letra é a representação gráfica de um fonema. Nem sempre há uma correspondência um para um (<span style='color:#059669;'>ex: "táxi" tem 5 letras e 6 fonemas /t-a-k-s-i/, o 'x' representa dois fonemas; "chapéu" tem 6 letras e 5 fonemas /ch-a-p-e-u/, o 'ch' representa um fonema</span>).</p>`
+                    },
+                    {
+                        id: 'encontros-vocalicos', name: 'Encontros Vocálicos', description: 'Diferença entre hiato, ditongo e tritongo.',
+                        // IDs reais de vídeos do YouTube sobre Encontros Vocálicos
+                        youtubeVideoId: 'j_VgehKVywk', // Link atualizado
+                        explanation: `<p><span style='color:#1d4ed8; font-weight: bold;'>Encontros Vocálicos:</span> São sequências de vogais e/ou semivogais em uma palavra.</p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Ditongo:</span> Encontro de uma vogal e uma semivogal (ou vice-versa) na mesma sílaba.
+                                                <ul>
+                                                    <li>Crescente (semivogal + vogal): (<span style='color:#059669;'>ex: quA-se, his-tó-riA</span>).</li>
+                                                    <li>Decrescente (vogal + semivogal): (<span style='color:#059669;'>ex: pAI, cAUsa</span>).</li>
+                                                </ul>
+                                            </li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Tritongo:</span> Encontro de uma semivogal, uma vogal e outra semivogal na mesma sílaba (<span style='color:#059669;'>ex: pa-ra-guAI, U-ru-guAI</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiato:</span> Encontro de duas vogais em sílabas diferentes (<span style='color:#059669;'>ex: sa-Ú-de, ra-Í-zes, a-E-ro-por-to</span>).</li>
+                                        </ul>`
+                    }
+                ]
+            },
+            {
+                category: "Morfologia",
+                topics: [
+                    {
+                        id: 'substantivo', name: 'Substantivo', description: 'Nomeia seres, objetos, lugares, sentimentos, etc.',
+                        // IDs reais de vídeos do YouTube sobre Substantivo
+                        youtubeVideoId: '8iXiBgCnGv4', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {
+                        id: 'adjetivo', name: 'Adjetivo', description: 'Caracteriza o substantivo.',
+                        // IDs reais de vídeos do YouTube sobre Adjetivo
+                        youtubeVideoId: '2d6PW3xp2pA', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {
+                        id: 'verbo', name: 'Verbo', description: 'Indica ação, estado, fenômeno da natureza.',
+                        // IDs reais de vídeos do YouTube sobre Verbo (usando a primeira aula como principal)
+                        youtubeVideoId: 'T8MB4vzTAv4', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {
+                        id: 'artigo', name: 'Artigo', description: 'Determina ou indetermina o substantivo.',
+                        // IDs reais de vídeos do YouTube sobre Artigo
+                        youtubeVideoId: '7zA6LKkx25g', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {
+                        id: 'pronome', name: 'Pronome', description: 'Substitui ou acompanha o substantivo.',
+                        // IDs reais de vídeos do YouTube sobre Pronome (usando a primeira aula como principal)
+                        youtubeVideoId: 'PQRdgiIutrE', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {
+                        id: 'adverbio', name: 'Advérbio', description: 'Modifica verbo, adjetivo ou outro advérbio.',
+                        // IDs reais de vídeos do YouTube sobre Advérbio
+                        youtubeVideoId: 'eoZ0aEJQACg', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {
+                        id: 'preposicao', name: 'Preposição', description: 'Liga palavras, estabelecendo relação.',
+                        // IDs reais de vídeos do YouTube sobre Preposição
+                        youtubeVideoId: 'vppN6868Ang', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {
+                        id: 'conjuncao', name: 'Conjunção', description: 'Liga orações ou termos de mesma função.',
+                        // IDs reais de vídeos do YouTube sobre Conjunção
+                        youtubeVideoId: 'C1MjafABdS4', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {
+                        id: 'numeral', name: 'Numeral', description: 'Indica quantidade, ordem, fração, multiplicação.',
+                        // IDs reais de vídeos do YouTube sobre Numeral
+                        youtubeVideoId: 'c8jh3QFe-fY', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {
+                        id: 'interjeicao', name: 'Interjeição', description: 'Expressa emoções ou sentimentos.',
+                        // IDs reais de vídeos do YouTube sobre Interjeição
+                        youtubeVideoId: 'zfWjTbslSBg', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {
+                        id: 'morfema', name: 'Morfema', description: 'Unidades mínimas de significado.',
+                        // IDs reais de vídeos do YouTube sobre Morfema
+                        youtubeVideoId: '-7oMt-shGWQ', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    }
+                ]
+            },
+            {
+                category: "Sintaxe",
+                topics: [
+                    {
+                        id: 'termos-essenciais', name: 'Termos Essenciais da Oração', description: 'Sujeito e Predicado.',
+                        // IDs reais de vídeos do YouTube sobre Termos Essenciais da Oração
+                        youtubeVideoId: 'eY51h52MMX8', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {
+                        id: 'termos-integrantes', name: 'Termos Integrantes da Oração', description: 'Complementos verbais e nominais.',
+                        youtubeVideoId: 'z3ItpRxNZyc',
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    },
+                    {
+                        id: 'termos-acessorios', name: 'Termos Acessórios da Oração', description: 'Adjuntos adnominais, adverbiais, aposto, vocativo.',
+                        youtubeVideoId: 'OkXSQ5FC_jM',
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    },
+                    {
+                        id: 'concordancia-verbal', name: 'Concordância Verbal', description: 'Regras de concordância entre verbo e sujeito.',
+                        // IDs reais de vídeos do YouTube sobre Concordância Verbal
+                        youtubeVideoId: 'OXIx5oHteG8', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {
+                        id: 'concordancia-nominal', name: 'Concordância Nominal', description: 'Regras de concordância entre nome e seus determinantes.',
+                        // IDs reais de vídeos do YouTube sobre Concordância Nominal
+                        youtubeVideoId: '2w_QRayuW5Y', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {
+                        id: 'regencia-verbal', name: 'Regência Verbal', description: 'Uso correto de preposições com verbos.',
+                        // IDs reais de vídeos do YouTube sobre Regência Verbal
+                        youtubeVideoId: 'hA4ip53JcK8', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {
+                        id: 'regencia-nominal', name: 'Regência Nominal', description: 'Uso correto de preposições com nomes (substantivos, adjetivos, advérbios).',
+                        // IDs reais de vídeos do YouTube sobre Regência Nominal
+                        youtubeVideoId: 'hA4ip53JcK8', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {
+                        id: 'transitividade-verbal', name: 'Transitividade Verbal', description: 'Classificação dos verbos quanto à necessidade de complemento.',
+                        // IDs reais de vídeos do YouTube sobre Transitividade Verbal
+                        youtubeVideoId: 'y2haxLgR4BM', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {
+                        id: 'vozes-do-verbo', name: 'Vozes do Verbo', description: 'Voz ativa, passiva (analítica e sintética) e reflexiva.',
+                        // IDs reais de vídeos do YouTube sobre Vozes do Verbo
+                        youtubeVideoId: 'GjbZMa0UmoE', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {
+                        id: 'uso-da-virgula', name: 'Uso da Vírgula', description: 'Regras de pontuação para a vírgula.',
+                        // IDs reais de vídeos do YouTube sobre Uso da Vírgula
+                        youtubeVideoId: '-uUtlvKifiY', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {
+                        id: 'crase', name: 'Crase', description: 'Uso do acento grave indicativo de crase.',
+                        // IDs reais de vídeos do YouTube sobre Crase
+                        youtubeVideoId: 'jBRraXRTECM', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {
+                        id: 'oracoes-reduzidas', name: 'Orações Reduzidas', description: 'Orações sem conectivo e com verbo em forma nominal.',
+                        // IDs reais de vídeos do YouTube sobre Orações Reduzidas
+                        youtubeVideoId: 'ZlRWfDVXgZM', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {
+                        id: 'colocacao-pronominal', name: 'Colocação Pronominal', description: 'Posição dos pronomes oblíquos átonos (próclise, mesóclise, ênclise).',
+                        // IDs reais de vídeos do YouTube sobre Colocação Pronominal
+                        youtubeVideoId: 'l_WxqVvmyGo', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {
+                        id: 'funcoes-que-se', name: 'Funções do "Que" e "Se"', description: 'Diferentes funções sintáticas do "que" e "se".',
+                        // IDs reais de vídeos do YouTube sobre Funções do "Que" e "Se"
+                        youtubeVideoId: 'b7f6x1EIV9g', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`,
+                    },
+                    {
+                        id: 'pontuacao', name: 'Pontuação Geral', description: 'Uso correto de vírgula, ponto, ponto e vírgula, dois pontos, etc.',
+                        // IDs reais de vídeos do YouTube sobre Pontuação Geral
+                        youtubeVideoId: 'BqOR1DEIuzY', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    }
+                ]
+            },
+            {
+                category: "Textualidade", // Nova categoria
+                topics: [
+                    {
+                        id: 'interpretacao-textos', name: 'Interpretação de Textos', description: 'Entender o que o texto diz explicitamente.',
+                        youtubeVideoId: '22iA3PPjr7c', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    },
+                    {
+                        id: 'compreensao-textos', name: 'Compreensão de Textos', description: 'Analisar e inferir o que o texto sugere implicitamente.',
+                        youtubeVideoId: 'IYlsViWKZAA', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    },
+                    {
+                        id: 'figuras-linguagem', name: 'Figuras de Linguagem', description: 'Recursos expressivos que dão maior força ou beleza à mensagem.',
+                        youtubeVideoId: 'gT5X3G8y_Wk', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    },
+                    {
+                        id: 'tipologia-textual', name: 'Tipologia Textual', description: 'Classificação dos textos de acordo com sua estrutura e objetivo.',
+                        youtubeVideoId: 'f002zJ8k9xM', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    },
+                    {
+                        id: 'denotacao-conotacao', name: 'Denotação e Conotação', description: 'Diferença entre sentido literal e figurado das palavras.',
+                        youtubeVideoId: 'yF-2e3jK6kQ', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    },
+                    {
+                        id: 'generos-textuais', name: 'Gêneros Textuais', description: 'Formas de comunicação que circulam socialmente (carta, e-mail, notícia, etc.).',
+                        youtubeVideoId: 'Ucjv4LT8CSg', 
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    }
+                ]
+            },
+            {
+                category: "Literatura", // Nova categoria
+                topics: [
+                    {
+                        id: 'o-que-e-literatura', name: 'O que é Literatura?', description: 'Conceito, função e importância da literatura.',
+                        youtubeVideoId: 'MrioXPJ4mCw',
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    },
+                    {
+                        id: 'escolas-literarias', name: 'Escolas Literárias', description: 'Principais movimentos e períodos da literatura.',
+                        youtubeVideoId: 'RsQSAWp-gEA', // Exemplo de vídeo geral sobre escolas literárias
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    },
+                    {
+                        id: 'estilos-de-epoca', name: 'Estilos de Época', description: 'Panorama dos estilos literários ao longo da história.',
+                        youtubeVideoId: 'ujoOSwl-KKc',
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    },
+                    {
+                        id: 'intertextualidade', name: 'Intertextualidade', description: 'Relação entre textos diferentes.',
+                        youtubeVideoId: 'mlMaDdGmc_s',
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    },
+                    {
+                        id: 'quinhentismo', name: 'Quinhentismo', description: 'Primeiras manifestações literárias no Brasil (séc. XVI).',
+                        youtubeVideoId: 'vWUD2aTzAM4',
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    },
+                    {
+                        id: 'barroco', name: 'Barroco', description: 'Arte do contraste e do conflito (séc. XVII).',
+                        youtubeVideoId: 'A88aSuuwwCM',
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    },
+                    {
+                        id: 'arcadismo', name: 'Arcadismo', description: 'Retorno à simplicidade e à natureza (séc. XVIII).',
+                        youtubeVideoId: 'SwuEXi4Bfuo',
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    },
+                    {
+                        id: 'romantismo', name: 'Romantismo', description: 'Exaltação do eu, nacionalismo e sentimentalismo (séc. XIX).',
+                        youtubeVideoId: '9I2wMm6ZFe4',
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    },
+                    {
+                        id: 'realismo', name: 'Realismo', description: 'Objetividade, crítica social e análise psicológica (séc. XIX).',
+                        youtubeVideoId: 'qAAf3aTM7Qc',
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    },
+                    {
+                        id: 'naturalismo', name: 'Naturalismo', description: 'Determinismo, patologias sociais e zoomorfização (séc. XIX).',
+                        youtubeVideoId: 'ERDwRWCzdFo',
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    },
+                    {
+                        id: 'parnasianismo', name: 'Parnasianismo', description: 'Culto à forma, arte pela arte e objetividade (séc. XIX).',
+                        youtubeVideoId: 'jXIujnBiuhw',
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    },
+                    {
+                        id: 'simbolismo', name: 'Simbolismo', description: 'Subjetividade, misticismo e musicalidade (final séc. XIX/início séc. XX).',
+                        youtubeVideoId: 'mKuQLShycIc',
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    },
+                    {
+                        id: 'pre-modernismo', name: 'Pré-Modernismo', description: 'Período de transição, temas sociais e regionalismo (início séc. XX).',
+                        youtubeVideoId: 'CX4UzqnZgD8',
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    },
+                    {
+                        id: 'modernismo', name: 'Modernismo', description: 'Ruptura com o passado, nacionalismo e liberdade formal (séc. XX).',
+                        youtubeVideoId: 'mTle-Sw9T4A',
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    },
+                    {
+                        id: 'pos-modernismo', name: 'Pós-Modernismo', description: 'Fragmentação, intertextualidade e pluralidade de estilos (após 1945).',
+                        youtubeVideoId: 'RhJsDcx4KVk',
+                        explanation: `<p>A <span style='color:#1d4ed8; font-weight: bold;'>acentuação gráfica</span> serve para indicar a <span style='color:#1d4ed8; font-weight: bold;'>sílaba tônica</span> da palavra e, em alguns casos, diferenciar palavras homógrafas.</p>
+                                        <p><strong>Regras principais:</strong></p>
+                                        <ul>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Proparoxítonas:</span> Todas são acentuadas (<span style='color:#059669;'>ex: lâmpada, médico, música</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Paroxítonas:</span> São acentuadas as terminadas em l, n, r, x, ps, ã(s), ão(s), um, uns, i(s), us (<span style='color:#059669;'>ex: fácil, hífen, caráter, tórax, bíceps, ímã, órgão, álbum, júri, vírus</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Oxítonas:</span> São acentuadas as terminadas em a(s), e(s), o(s), em, ens (<span style='color:#059669;'>ex: sofá, café, cipó, também, parabéns</span>).</li>
+                                            <li><span style='color:#1d4ed8; font-weight: bold;'>Hiatos:</span> Acentua-se o 'i' e 'u' tônicos quando formam hiato com a vogal anterior e estão sozinhos na sílaba (ou seguidos de 's') (<span style='color:#059669;'>ex: sa-ú-de, fa-ís-ca</span>).</li>
+                                        </ul>`
+                    }
+                ]
+            }
+        ];
+
+        // --- VARIÁVEIS GLOBAIS ---
+        let selectedTopics = [];
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let friendsHelpCount = 3; // Contador para a ajuda dos amigos
+        let savedQuestionQuantity = 10; // Variável para salvar a quantidade de questões
+        let topicPerformance = {}; // Novo objeto para rastrear o desempenho por tópico
+        let currentQuestionData = null; // Para armazenar os dados da questão atual para o recurso
+        let isMuted = false; // Estado inicial do som: não mutado
+        let selectedLevel = null; // Will store '6EF', '7EF', '8EF', '9EF', '1EM', '2EM', '3EM', or 'enem'
+        let selectedDifficulty = null; // Novo: Dificuldade selecionada para o simulado
+        const ADMIN_PASSWORD = "wpm2025";
+        let pendingAction = null; // To store the action after password confirmation
+        let isSimulado = false; // Flag para indicar se é um simulado
+        let timerInterval = null; // Variável para o intervalo do cronômetro
+        let startTime = 0; // Tempo de início do cronômetro
+        let selectedTopicQuantities = {}; // Armazena a quantidade de questões por tópico para o simulado
+
+
+        // --- FUNÇÕES DE SOM ---
+        function playCorrectSound() {
+            if (!isMuted) {
+                // Toca um acorde de C maior para simular aplauso
+                correctPolySynth.triggerAttackRelease(["C5", "E5", "G5"], "8n"); 
+            }
+        }
+
+        function playIncorrectSound() {
+            if (!isMuted) {
+                // Toca uma sequência descendente para simular tristeza
+                incorrectSadSynth.triggerAttackRelease("C3", "0.5"); // Primeira nota
+                incorrectSadSynth.triggerAttackRelease("A2", "0.5", Tone.now() + 0.4); // Segunda nota, com um pequeno atraso
+            }
+            }
+
+        // --- ELEMENTOS DO DOM ---
+        const homeScreen = document.getElementById('home-screen');
+        const topicSelectionScreen = document.getElementById('topic-selection-screen');
+        const simuladoSetupScreen = document.getElementById('simulado-setup-screen'); // Nova tela
+        const quizScreen = document.getElementById('quiz-screen');
+        const finalScreen = document.getElementById('final-screen');
+
+        const enterAppBtn = document.getElementById('enter-app-btn');
+        const topicContainerQuiz = document.getElementById('topic-container-quiz'); // Container para quiz normal
+        const topicContainerSimulado = document.getElementById('topic-container-simulado'); // Container para simulado
+        const questionQuantityQuizInput = document.getElementById('question-quantity-quiz');
+        const questionQuantitySimuladoInput = document.getElementById('question-quantity-simulado');
+        const startSelectedQuizBtn = document.getElementById('start-selected-quiz');
+        const startSimuladoBtn = document.getElementById('start-simulado'); // Novo botão
+        const backToHomeFromTopicsBtn = document.getElementById('back-to-home-from-topics');
+        const backToHomeFromSimuladoSetupBtn = document.getElementById('back-to-home-from-simulado-setup'); // Novo botão
+
+        const quizTopicTitle = document.getElementById('quiz-topic-title');
+        const questionCounter = document.getElementById('question-counter');
+        const scoreDisplay = document.getElementById('score');
+        const progressBar = document.getElementById('progress-bar');
+        const loadingArea = document.getElementById('loading-area'); // Novo elemento para a área de carregamento
+        const loadingText = document.getElementById('loading-text'); // Novo elemento para o texto de carregamento
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const quizContent = document.getElementById('quiz-content');
+        const nextQuestionBtn = document.getElementById('next-question');
+        const backToMenuBtn = document.getElementById('back-to-menu');
+        const askFriendsBtn = document.getElementById('ask-friends-btn');
+        const friendsHelpCountSpan = document.getElementById('friends-help-count');
+        const appealQuestionBtn = document.getElementById('appeal-question-btn'); // Botão de Recurso
+
+        const timerDisplayContainer = document.getElementById('timer-display-container'); // Container do timer
+        const timerDisplay = document.getElementById('timer-display'); // Display do timer
+        const finalTimeDisplay = document.getElementById('final-time'); // Display do tempo final
+
+        const finalTopic = document.getElementById('final-topic');
+        const finalScore = document.getElementById('final-score');
+        const restartQuizBtn = document.getElementById('restart-quiz');
+        const backToMenuFinalBtn = document.getElementById('back-to-menu-final');
+        const backToHomeFromFinalBtn = document.getElementById('back-to-home-from-final'); // Novo botão
+
+        const studyModal = document.getElementById('study-modal'); // Renomeado de explanationModal
+        const studyModalTitleText = document.getElementById('study-modal-title-text'); // Renomeado de explanationModalTitleText
+        const studyText = document.getElementById('study-text'); // Renomeado de explanationText
+        const closeStudyModalBtn = document.getElementById('close-study-modal'); // Renomeado de closeModalBtn
+        const studyLoadingArea = document.getElementById('study-loading-area'); // Novo elemento para o spinner no modal de estudo
+
+        const appealModal = document.getElementById('appeal-modal'); // Modal de Recurso
+        const appealTextArea = document.getElementById('appeal-text-area'); // Textarea do recurso
+        const submitAppealBtn = document.getElementById('submit-appeal-btn'); // Botão de enviar recurso
+        const appealResponseContainer = document.getElementById('appeal-response-container'); // Container da resposta da IA
+        const appealResponseLoading = document.getElementById('appeal-response-loading'); // Spinner da resposta da IA
+        const appealResponseText = document.getElementById('appeal-response-text'); // Texto da resposta da IA
+        const closeAppealModalBtn = document.getElementById('close-appeal-modal-btn'); // Botão de fechar modal de recurso
+
+        const muteButton = document.getElementById('mute-button'); // Botão de mudo
+        const muteIcon = document.getElementById('mute-icon'); // Ícone de mudo
+        const unmuteIcon = document.getElementById('unmute-icon'); // Ícone de não mudo
+
+        const levelSelectButtons = document.querySelectorAll('.level-select-btn'); // Botões de seleção de nível
+        const difficultyRadios = document.querySelectorAll('input[name="difficulty]'); // Radio buttons de dificuldade
+        const difficultyLabels = document.querySelectorAll('.difficulty-label'); // Labels dos radio buttons de dificuldade
+
+        const passwordModal = document.getElementById('password-modal');
+        const adminPasswordInput = document.getElementById('admin-password-input');
+        const passwordErrorMessage = document.getElementById('password-error-message');
+        const confirmPasswordBtn = document.getElementById('confirm-password-btn');
+        const cancelPasswordBtn = document.getElementById('cancel-password-btn');
+
+        // Novos elementos para o modal de distribuição de questões
+        const questionDistributionModal = document.getElementById('question-distribution-modal');
+        const expectedTotalQuestionsSpan = document.getElementById('expected-total-questions');
+        const questionDistributionContainer = document.getElementById('question-distribution-container');
+        const randomizeDistributionBtn = document.getElementById('randomize-distribution-btn');
+        const distributionTotalDisplay = document.getElementById('distribution-total-display');
+        const distributionErrorMessage = document.getElementById('distribution-error-message');
+        const confirmDistributionBtn = document.getElementById('confirm-distribution-btn');
+        const cancelDistributionBtn = document.getElementById('cancel-distribution-btn');
+
+        // Novos elementos para o modal de relatório de desempenho
+        const performanceReportModal = document.getElementById('performance-report-modal');
+        const performanceReportContent = document.getElementById('performance-report-content');
+        const closeReportModalBtn = document.getElementById('close-report-modal-btn');
+
+
+        // --- FUNÇÕES DE NAVEGAÇÃO ENTRE TELAS ---
+        function showScreen(screen) {
+            homeScreen.classList.add('hidden');
+            topicSelectionScreen.classList.add('hidden');
+            simuladoSetupScreen.classList.add('hidden'); // Esconde a tela de simulado
+            quizScreen.classList.add('hidden');
+            finalScreen.classList.add('hidden');
+            appealModal.classList.add('hidden'); // Esconde o modal de recurso ao mudar de tela
+            passwordModal.classList.add('hidden'); // Esconde o modal de senha ao mudar de tela
+            questionDistributionModal.classList.add('hidden'); // Esconde o modal de distribuição
+            performanceReportModal.classList.add('hidden'); // Esconde o modal de relatório
+            studyModal.classList.add('hidden'); // Esconde o modal de estudo ao mudar de tela
+            screen.classList.remove('hidden');
+        }
+
+        function showModal(modalElement) {
+            modalElement.classList.remove('hidden');
+            setTimeout(() => {
+                modalElement.classList.remove('opacity-0');
+                modalElement.querySelector('.modal-container').classList.remove('scale-95', 'opacity-0');
+            }, 10);
+        }
+
+        function hideModal(modalElement) {
+            modalElement.classList.add('opacity-0');
+            modalElement.querySelector('.modal-container').classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modalElement.classList.add('hidden');
+            }, 300);
+        }
+
+        function updateStartQuizButtonState(isSimuladoContext) {
+            const currentSelectedTopics = selectedTopics.length > 0;
+            if (isSimuladoContext) {
+                // Para simulado, o botão Iniciar depende de tópicos selecionados E dificuldade selecionada
+                if (currentSelectedTopics && selectedDifficulty) {
+                    startSimuladoBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    startSimuladoBtn.disabled = false;
+                } else {
+                    startSimuladoBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    startSimuladoBtn.disabled = true;
+                }
+            } else {
+                if (currentSelectedTopics) {
+                    startSelectedQuizBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    startSelectedQuizBtn.disabled = false;
+                } else {
+                    startSelectedQuizBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    startSelectedQuizBtn.disabled = true;
+                }
+            }
+        }
+
+        // --- FUNÇÕES DO QUIZ ---
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Helper function for API calls
+        async function callGeminiApi(prompt, responseMimeType, responseSchema = null) {
+            const apiKey = "AIzaSyB7qiadkipn35zzci0NwjZJUPsXS3q5rf8"; // API Key - Inserida diretamente para uso em navegador
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [{ role: "user", parts: [{ text: prompt }] }],
+                generationConfig: {
+                    responseMimeType: responseMimeType,
+                },
+            };
+
+            if (responseSchema) {
+                payload.generationConfig.responseSchema = responseSchema;
+            }
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorBody = await response.json();
+                    console.error("API Error Response:", errorBody);
+                    throw new Error(`API request failed with status ${response.status}: ${errorBody.error?.message || response.statusText}`);
+                }
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    return result.candidates[0].content.parts[0].text;
+                } else {
+                    console.error("Unexpected API response structure:", result);
+                    throw new Error("Unexpected API response structure or missing content.");
+                }
+            } catch (error) {
+                console.error("Error calling Gemini API:", error);
+                throw error; // Re-throw to be caught by the calling function
+            }
+        }
+
+        async function fetchQuestionsFromAI(topicQuantities, level, difficulty = null) { // Agora recebe um objeto topicQuantities
+            let topicDetails = [];
+            for (const topicId in topicQuantities) {
+                const quantity = topicQuantities[topicId];
+                const topic = grammarData.flatMap(cat => cat.topics).find(t => t.id === topicId);
+                if (topic) {
+                    topicDetails.push(`${topic.name}: ${quantity} questões`);
+                }
+            }
+            const topicDistributionString = topicDetails.join(', ');
+
+            let levelDescription = "";
+            if (level.endsWith("EF")) {
+                levelDescription = `para alunos do ${level.replace('EF', 'º ano do ensino fundamental')}, com nível de dificuldade adequado a essa faixa etária.`;
+            } else if (level.endsWith("EM")) {
+                levelDescription = `para alunos do ${level.replace('EM', 'º ano do ensino médio')}, com nível de dificuldade adequado a essa faixa etária.`;
+            } else if (level === "enem") { // Alterado de 'concurseiro'
+                levelDescription = `de nível ${difficulty}, típicas de concursos públicos (ENEM), englobando todos os níveis de ensino.`; // Usa a dificuldade
+            }
+
+            // Modificado para incluir a lista de IDs de tópicos permitidos no prompt
+            const prompt = `Gere questões de múltipla escolha ${levelDescription} sobre os seguintes tópicos de gramática portuguesa com a seguinte distribuição: ${topicDistributionString}. Para cada questão, forneça a pergunta, quatro opções de resposta e o índice da resposta correta (0 para a primeira opção, 1 para a segunda, etc.). Inclua também o "topicId" correspondente a um dos seguintes IDs de tópico selecionados: [${selectedTopics.map(id => `"${id}"`).join(', ')}] para cada questão, para que eu possa buscar a explicação relevante. O formato deve ser um array JSON de objetos, como no exemplo:
+            [{ "question": "Qual a capital de Portugal?", "options": ["Porto", "Lisboa", "Coimbra", "Braga"], "answer": 1, "topicId": "acentuacao" }]
+            Certifique-se de que as questões sejam variadas e cobrem diferentes aspectos dos tópicos.`;
+
+            const responseSchema = {
+                type: "ARRAY",
+                items: {
+                    type: "OBJECT",
+                    properties: {
+                        "question": { "type": "STRING" },
+                        "options": {
+                            "type": "ARRAY",
+                            "items": { "type": "STRING" }
+                        },
+                        "answer": { "type": "NUMBER" },
+                        "topicId": { "type": "STRING" }
+                    },
+                    "required": ["question", "options", "answer", "topicId"]
+                }
+            };
+
+            try {
+                const jsonString = await callGeminiApi(prompt, "application/json", responseSchema);
+                return JSON.parse(jsonString);
+            } catch (error) {
+                console.error("Erro ao gerar questões:", error);
+                showStudyModal("Erro na Geração de Questões", `Não foi possível gerar questões. Detalhes: ${error.message}. Por favor, tente novamente.`);
+                return [];
+            }
+        }
+
+        function loadTopics(isSimuladoContext = false) {
+            const targetContainer = isSimuladoContext ? topicContainerSimulado : topicContainerQuiz;
+            const targetQuestionQuantityInput = isSimuladoContext ? questionQuantitySimuladoInput : questionQuantityQuizInput;
+
+            targetContainer.innerHTML = '';
+            grammarData.forEach(categoryData => {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'bg-white p-6 rounded-xl shadow-md';
+                categoryDiv.innerHTML = `<h2 class="text-2xl font-bold text-slate-700 mb-4">${categoryData.category}</h2>
+                                         <div id="topic-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>`;
+                const topicListDiv = categoryDiv.querySelector('#topic-list');
+
+                categoryData.topics.forEach(topic => {
+                    const topicCard = document.createElement('div');
+                    topicCard.className = 'topic-card bg-slate-50 p-4 rounded-lg border border-slate-200 hover:border-sky-500 transition-all cursor-pointer flex flex-col justify-between';
+                    topicCard.dataset.id = topic.id;
+                    topicCard.innerHTML = `
+                        <div>
+                            <h3 class="font-semibold text-lg text-sky-800">${topic.name}</h3>
+                            <p class="text-sm text-slate-600 mt-1">${topic.description}</p>
+                        </div>
+                        <button class="study-btn mt-3 text-sky-600 hover:text-sky-800 text-sm font-medium self-end">Estudar</button>
+                    `;
+                    topicCard.addEventListener('click', (event) => {
+                        // Evita que o clique no botão de explicação selecione/desselecione o tópico
+                        if (!event.target.classList.contains('study-btn')) {
+                            topicCard.classList.toggle('bg-sky-100');
+                            topicCard.classList.toggle('border-sky-500');
+                            const topicId = topicCard.dataset.id;
+                            if (selectedTopics.includes(topicId)) {
+                                selectedTopics = selectedTopics.filter(id => id !== topicId);
+                            } else {
+                                selectedTopics.push(topicId);
+                            }
+                            updateStartQuizButtonState(isSimuladoContext);
+                        }
+                    });
+
+                    const studyBtn = topicCard.querySelector('.study-btn');
+                    studyBtn.addEventListener('click', (event) => {
+                        event.stopPropagation(); // Stop propagation to prevent topic selection
+                        showStudyModal(topic.name, topic.id); // Pass topic name as title, and topic ID as contentOrTopicId
+                    });
+
+                    topicListDiv.appendChild(topicCard);
+                });
+                targetContainer.appendChild(categoryDiv);
+            });
+            // Restaura a quantidade de questões salva
+            targetQuestionQuantityInput.value = savedQuestionQuantity;
+            updateStartQuizButtonState(isSimuladoContext);
+        }
+
+        async function startQuiz(isSimuladoMode, distribution = null) { // Adicionado 'distribution'
+            isSimulado = isSimuladoMode; // Define o modo do quiz
+            const currentQuestionQuantityInput = isSimulado ? questionQuantitySimuladoInput : questionQuantityQuizInput;
+
+            if (selectedTopics.length === 0) {
+                showStudyModal("Erro", "Por favor, selecione pelo menos um tópico para iniciar o quiz.");
+                return;
+            }
+
+            if (isSimulado && !selectedDifficulty) { // Verifica a dificuldade para simulado
+                showStudyModal("Erro", "Por favor, selecione um nível de dificuldade para o simulado.");
+                return;
+            }
+
+            // Salva a quantidade de questões antes de iniciar o quiz
+            savedQuestionQuantity = parseInt(currentQuestionQuantityInput.value);
+
+            // Reset topic performance tracking for a new quiz
+            topicPerformance = {};
+            selectedTopics.forEach(topicId => {
+                topicPerformance[topicId] = { correct: 0, total: 0 };
+            });
+
+            // Show loading spinner and text
+            quizContent.classList.add('hidden');
+            loadingArea.classList.remove('hidden'); // Show loading area
+            showScreen(quizScreen); // Show quiz screen with spinner
+
+            // Se for simulado e a distribuição foi fornecida, usa a distribuição
+            if (isSimulado && distribution) {
+                currentQuestions = await fetchQuestionsFromAI(distribution, selectedLevel, selectedDifficulty);
+            } else { // Caso contrário, usa a quantidade total (para quiz normal)
+                const quantity = parseInt(currentQuestionQuantityInput.value);
+                const allTopicsObject = selectedTopics.reduce((acc, topicId) => {
+                    acc[topicId] = Math.max(1, Math.floor(quantity / selectedTopics.length)); // Pelo menos 1 por tópico
+                    return acc;
+                }, {});
+                // Ajusta o restante para o primeiro tópico, se houver
+                let currentSum = Object.values(allTopicsObject).reduce((sum, val) => sum + val, 0);
+                let diff = quantity - currentSum;
+                if (diff > 0 && selectedTopics.length > 0) {
+                    allTopicsObject[selectedTopics[0]] += diff;
+                }
+                currentQuestions = await fetchQuestionsFromAI(allTopicsObject, selectedLevel, selectedDifficulty);
+            }
+
+            // Hide loading spinner and text
+            loadingArea.classList.add('hidden'); // Hide loading area
+            quizContent.classList.remove('hidden');
+
+            if (currentQuestions.length === 0) {
+                // Error message already shown by fetchQuestionsFromAI
+                selectedTopics = []; // Reset selected topics
+                updateStartQuizButtonState(isSimulado);
+                showScreen(isSimulado ? simuladoSetupScreen : topicSelectionScreen);
+                return;
+            }
+
+            // Shuffle all questions together after generation
+            currentQuestions = shuffleArray(currentQuestions);
+
+            currentQuestionIndex = 0;
+            score = 0;
+            friendsHelpCount = 3; // Reset help count for a new quiz
+            friendsHelpCountSpan.textContent = friendsHelpCount; // Atualiza o display da contagem
+            
+            // Gerencia a visibilidade do botão "Perguntar ao Gramatiquinho"
+            if (isSimulado) {
+                askFriendsBtn.classList.add('hidden');
+                timerDisplayContainer.classList.remove('hidden'); // Mostra o timer
+                startTimer(); // Inicia o cronômetro
+            } else {
+                askFriendsBtn.classList.remove('hidden');
+                askFriendsBtn.disabled = false;
+                askFriendsBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                timerDisplayContainer.classList.add('hidden'); // Esconde o timer
+                stopTimer(); // Garante que o timer esteja parado
+            }
+            appealQuestionBtn.classList.add('hidden'); // Esconde o botão de recurso no início da questão
+
+            // O quizTopicTitle será atualizado em displayQuestion() para mostrar o tópico da questão atual
+            quizTopicTitle.textContent = ''; 
+
+            scoreDisplay.textContent = score;
+            updateProgressBar();
+            displayQuestion();
+        }
+
+        async function displayQuestion() {
+            if (currentQuestionIndex < currentQuestions.length) {
+                const question = currentQuestions[currentQuestionIndex];
+                currentQuestionData = question; // Salva a questão atual para o recurso
+                questionText.textContent = question.question;
+                optionsContainer.innerHTML = '';
+                nextQuestionBtn.classList.add('hidden');
+                
+                // Atualiza o título do tópico para mostrar apenas o tópico da questão atual
+                const currentTopic = grammarData.flatMap(cat => cat.topics).find(t => t.id === question.topicId);
+                if (currentTopic) {
+                    quizTopicTitle.textContent = currentTopic.name;
+                } else {
+                    quizTopicTitle.textContent = 'Tópico Desconhecido';
+                }
+
+                // Gerencia a visibilidade do botão "Perguntar ao Gramatiquinho"
+                if (isSimulado) {
+                    askFriendsBtn.classList.add('hidden');
+                } else {
+                    askFriendsBtn.classList.remove('hidden');
+                    friendsHelpCountSpan.textContent = friendsHelpCount;
+                    if (friendsHelpCount === 0) {
+                        askFriendsBtn.disabled = true;
+                        askFriendsBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    } else {
+                        askFriendsBtn.disabled = false;
+                        askFriendsBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    }
+                }
+                appealQuestionBtn.classList.add('hidden'); // Esconde o botão de recurso até a resposta
+
+                // Track total questions for the current topic
+                if (topicPerformance[question.topicId]) {
+                    topicPerformance[question.topicId].total++;
+                } else {
+                    // This case should ideally not happen if total is incremented on display
+                    topicPerformance[question.topicId] = { correct: 0, total: 1 };
+                }
+
+                // Shuffle options for the current question
+                const shuffledOptions = shuffleArray([...question.options]);
+
+                shuffledOptions.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.className = 'option-btn bg-white text-slate-700 border border-slate-300 rounded-lg p-3 text-left hover:bg-slate-100 hover:border-sky-500 transition-all shadow-sm';
+                    button.textContent = option;
+                    // Store the original index of the option in the unshuffled array
+                    button.dataset.originalIndex = question.options.indexOf(option); 
+                    button.addEventListener('click', () => checkAnswer(button, question));
+                    optionsContainer.appendChild(button);
+                });
+                questionCounter.textContent = `Questão ${currentQuestionIndex + 1} de ${currentQuestions.length}`;
+                updateProgressBar();
+            } else {
+                showFinalScreen();
+            }
+        }
+
+        async function checkAnswer(selectedButton, question) {
+            const allOptions = optionsContainer.querySelectorAll('.option-btn');
+            const selectedOriginalIndex = parseInt(selectedButton.dataset.originalIndex);
+            const correctAnswerOriginalIndex = question.answer;
+
+            // Disable all options after an answer is chosen
+            allOptions.forEach(button => {
+                button.classList.add('disabled');
+                button.removeEventListener('click', () => {}); // Remove event listener
+            });
+
+            nextQuestionBtn.classList.remove('hidden');
+            askFriendsBtn.classList.add('hidden'); // Hide ask friends button after answer
+            appealQuestionBtn.classList.remove('hidden'); // Mostra o botão de recurso após a resposta
+
+            let explanationTitle = "";
+            let explanationContent = "";
+            let topicNameForModal = "Tópico Desconhecido"; // Default name for modal title
+
+            // Get the explanation for the topic from grammarData
+            let topicExplanation = "Nenhuma explicação detalhada disponível para este tópico.";
+            for (const category of grammarData) {
+                const foundTopic = category.topics.find(t => t.id === question.topicId);
+                if (foundTopic) {
+                    topicExplanation = foundTopic.explanation;
+                    topicNameForModal = foundTopic.name; // Use the actual topic name for the modal title
+                    break;
+                }
+            }
+
+            if (selectedOriginalIndex === correctAnswerOriginalIndex) {
+                selectedButton.classList.add('correct');
+                score++;
+                scoreDisplay.textContent = score;
+                explanationTitle = "Resposta Correta! 🎉";
+                explanationContent = "Parabéns! Sua resposta está correta.";
+                playCorrectSound(); // Play correct sound
+                // Track correct answer for the topic
+                if (topicPerformance[question.topicId]) {
+                    topicPerformance[question.topicId].correct++;
+                } else {
+                    // This case should ideally not happen if total is incremented on display
+                    topicPerformance[question.topicId] = { correct: 1, total: 1 };
+                }
+                
+                showStudyModal(explanationTitle, explanationContent); // Chamar showStudyModal aqui
+            } else {
+                selectedButton.classList.add('incorrect');
+                
+                // Find the correct button and highlight it
+                allOptions.forEach(button => {
+                    if (parseInt(button.dataset.originalIndex) === correctAnswerOriginalIndex) {
+                        button.classList.add('correct');
+                    }
+                });
+
+                explanationTitle = "Resposta Incorreta! 😔";
+                
+                // --- AI-generated explanation for incorrect answers ---
+                try {
+                    explanationContent = await fetchQuestionExplanationFromAI(question, correctAnswerOriginalIndex);
+                    explanationContent = `Você errou esta questão. A resposta correta era: <strong>${question.options[correctAnswerOriginalIndex]}</strong>.<br><br><strong>Explicação do Gramatiquinho:</strong><br><br>${explanationContent}`;
+                } catch (error) {
+                    console.error("Erro ao gerar explicação da questão:", error);
+                    explanationContent = `Você errou esta questão. A resposta correta era: <strong>${question.options[correctAnswerOriginalIndex]}</strong>.<br><br>Ocorreu um erro ao carregar a explicação. Detalhes: ${error.message}.`;
+                }
+                // --- End AI-generated explanation ---
+                
+                playIncorrectSound(); // Play incorrect sound
+                
+                // Call showStudyModal with the AI-generated explanation content and the topic name
+                showStudyModal(topicNameForModal, explanationContent);
+            }
+        }
+
+        function updateProgressBar() {
+            const progress = ((currentQuestionIndex) / currentQuestions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function showFinalScreen() {
+            // finalTopic.textContent = quizTopicTitle.textContent; // Removido para não mostrar "Tópico Desconhecido" no final
+            finalTopic.textContent = "Seu desempenho por tópico:"; // Título genérico para o relatório
+            finalScore.textContent = `${score} / ${currentQuestions.length}`;
+            
+            if (isSimulado) {
+                stopTimer(); // Para o cronômetro ao final do simulado
+                finalTimeDisplay.textContent = `Tempo total: ${formatTime(Date.now() - startTime)}`;
+                finalTimeDisplay.classList.remove('hidden');
+            } else {
+                finalTimeDisplay.classList.add('hidden');
+            }
+            
+            showScreen(finalScreen);
+            showPerformanceReport(); // Chama o relatório de desempenho ao final
+        }
+
+        // Nova função para buscar conteúdo de estudo da IA (COMPLETO)
+        async function fetchComprehensiveStudyContentFromAI(topicId, topicName) {
+            const prompt = `Gere um material de estudo completo e detalhado sobre o tópico de gramática portuguesa "${topicName}". Inclua definições, exemplos, regras principais e quaisquer subtópicos relevantes. O conteúdo deve ser vasto e didático, com foco em facilitar o aprendizado.`;
+            try {
+                const plainTextContent = await callGeminiApi(prompt, "text/plain");
+                return formatAIContentToHtml(plainTextContent);
+            } catch (error) {
+                console.error("Erro ao gerar material de estudo completo:", error);
+                return `<p class="text-red-500">Ocorreu um erro ao carregar o material de estudo completo. Detalhes: ${error.message}. Por favor, tente novamente.</p>`;
+            }
+        }
+
+        // Função para buscar explicação de questão da IA (CONCISA)
+        async function fetchQuestionExplanationFromAI(question, correctAnswerOriginalIndex) {
+            const prompt = `Explique de forma concisa e objetiva por que a opção "${question.options[correctAnswerOriginalIndex]}" é a resposta correta para a seguinte questão de gramática portuguesa: "${question.question}". As opções eram: ${question.options.join(', ')}.`;
+            try {
+                const plainTextContent = await callGeminiApi(prompt, "text/plain");
+                return formatAIContentToHtml(plainTextContent);
+            } catch (error) {
+                console.error("Erro ao gerar explicação da questão:", error);
+                return `<p class="text-red-500">Ocorreu um erro ao carregar a explicação da questão. Detalhes: ${error.message}. Por favor, tente novamente.</p>`;
+            }
+        }
+
+        // Função para formatar o conteúdo da IA para HTML
+        function formatAIContentToHtml(plainTextContent) {
+            let formattedContent = plainTextContent;
+
+            // 1. Remover quaisquer asteriscos ou marcadores de markdown remanescentes
+            formattedContent = formattedContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Negrito
+            formattedContent = formattedContent.replace(/\*(.*?)\*/g, '<em>$1</em>');   // Itálico
+            formattedContent = formattedContent.replace(/__(.*?)__/g, '<u>$1</u>');   // Sublinhado
+            
+            // 2. Processar o texto linha a linha para adicionar formatação HTML
+            const lines = formattedContent.split('\n');
+            let htmlParts = [];
+            let inList = false;
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (line.length === 0) {
+                    if (inList) {
+                        htmlParts.push('</ul>');
+                        inList = false;
+                    }
+                    // Evita múltiplos <p> vazios
+                    if (htmlParts.length > 0 && htmlParts[htmlParts.length - 1] !== '<p>') {
+                            htmlParts.push('<p>');
+                    } else if (htmlParts.length === 0) {
+                        htmlParts.push('<p>'); // Start first paragraph
+                    }
+                } else if (line.startsWith('- ') || line.startsWith('* ')) { // Detecção simples de item de lista
+                    if (!inList) {
+                        htmlParts.push('<ul>');
+                        inList = true;
+                    }
+                    htmlParts.push(`<li>${line.substring(2).trim()}</li>`);
+                } else if (line.match(/^[A-ZÀ-Ú][a-zA-ZÀ-Ú\s]+:/) && !inList) {
+                    // Heurística para um título (começa com maiúscula, termina com dois pontos, não é item de lista)
+                    // Fecha o parágrafo anterior se estiver aberto
+                    if (htmlParts.length > 0 && htmlParts[htmlParts.length - 1] === '<p>') {
+                        htmlParts[htmlParts.length - 1] = '</p>';
+                    }
+                    htmlParts.push(`<h3><span style='color:#1d4ed8;'>${line}</span></h3>`);
+                }
+                else {
+                    if (!inList && (htmlParts.length === 0 || htmlParts[htmlParts.length - 1] === '</p>' || htmlParts[htmlParts.length - 1].startsWith('</ul>'))) {
+                        htmlParts.push('<p>'); // Inicia um novo parágrafo se não estiver em um
+                    } else if (inList) {
+                        // Se ainda estiver em uma lista, isso é uma continuação ou um novo item não pego pelo - ou *
+                        // Para simplicidade, assuma que uma nova linha não começando com - ou * quebra a lista
+                        htmlParts.push('</ul>');
+                        inList = false;
+                        htmlParts.push('<p>');
+                    }
+                    htmlParts.push(line);
+                }
+            });
+
+            if (inList) {
+                htmlParts.push('</ul>');
+            }
+            
+            // Juntar as partes e limpar parágrafos vazios ou tags duplicadas
+            let finalHtml = htmlParts.join('');
+            finalHtml = finalHtml.replace(/<p><\/p>/g, ''); // Remove parágrafos vazios
+            finalHtml = finalHtml.replace(/<p>\s*<\/p>/g, ''); // Remove parágrafos com apenas espaços
+            finalHtml = finalHtml.replace(/<\/p><p>/g, ''); // Remove </p><p> para evitar quebras desnecessárias
+            finalHtml = finalHtml.replace(/<\/ul><ul>/g, ''); // Remove </ul><ul> para evitar quebras desnecessárias em listas
+            
+            // Garantir que o conteúdo esteja dentro de um <p> se não houver outra estrutura
+            if (!finalHtml.startsWith('<p>') && !finalHtml.startsWith('<h3>') && !finalHtml.startsWith('<ul>')) {
+                finalHtml = `<p>${finalHtml}</p>`;
+            }
+
+            // 3. Aplicar negrito e cores para termos específicos (pode ser ajustado para ser mais genérico ou específico da IA)
+            const blueTerms = [
+                "Substantivo", "Verbo", "Adjetivo", "Advérbio", "Preposição", "Conjunção", "Numeral", "Pronome", "Artigo", "Interjeição", "Morfema",
+                "Sintaxe", "Fonética e Fonologia", "Morfologia", "Textualidade", "Literatura",
+                "Vogais", "Consoantes", "Semivogais", "Ditongo", "Tritongo", "Hiato",
+                "Sujeito", "Predicado", "Objeto Direto", "Objeto Indireto", "Complemento Nominal", "Agente da Passiva",
+                "Adjunto Adnominal", "Adjunto Adverbial", "Aposto", "Vocativo",
+                "Concordância Verbal", "Concordância Nominal", "Regência Verbal", "Regência Nominal", "Transitividade Verbal",
+                "Voz Ativa", "Voz Passiva", "Voz Reflexiva", "Uso da Vírgula", "Crase", "Orações Reduzidas", "Colocação Pronominal",
+                "Funções do \"Que\" e \"Se\"", "Pontuação Geral",
+                "Interpretação de Textos", "Compreensão de Textos", "Figuras de Linguagem", "Tipologia Textual", "Denotação e Conotação", "Gêneros Textuais",
+                "Quinhentismo", "Barroco", "Arcadismo", "Romantismo", "Realismo", "Naturalismo", "Parnasianismo", "Simbolismo", "Pré-Modernismo", "Modernismo", "Pós-Modernismo"
+            ];
+
+            blueTerms.forEach(term => {
+                // Usa \b para corresponder apenas a palavras inteiras
+                const regex = new RegExp(`\\b(${term})\\b`, 'g');
+                finalHtml = finalHtml.replace(regex, `<span style='color:#1d4ed8; font-weight: bold;'>$1</span>`);
+            });
+
+            // Destacar exemplos em verde (palavras entre parênteses ou após "ex:")
+            finalHtml = finalHtml.replace(/(ex:\s*[^.<]+(?:\.|\))?)/g, "<span style='color:#059669;'>$&</span>");
+            finalHtml = finalHtml.replace(/(\([\w\s,;]+\))/g, "<span style='color:#059669;'>$&</span>"); // Para conteúdo dentro de parênteses
+
+            return finalHtml;
+        }
+
+        async function showStudyModal(modalTitle, contentOrTopicId) {
+            studyModalTitleText.textContent = modalTitle;
+            studyText.innerHTML = ''; // Clear previous content
+            studyText.classList.add('hidden'); // Hide study text content
+            studyLoadingArea.classList.remove('hidden'); // Show spinner
+
+            showModal(studyModal); // Show the modal itself
+
+            let contentToDisplay = '';
+            const foundTopic = grammarData.flatMap(cat => cat.topics).find(t => t.id === contentOrTopicId);
+
+            if (foundTopic) { // This path is for the "Estudar" button on topic cards
+                // Call AI for comprehensive study content
+                try {
+                    contentToDisplay = await fetchComprehensiveStudyContentFromAI(foundTopic.id, foundTopic.name);
+                } catch (error) {
+                    console.error("Erro ao carregar material de estudo:", error);
+                    contentToDisplay = `<p class="text-red-500">Ocorreu um erro ao carregar o material de estudo. Detalhes: ${error.message}. Por favor, tente novamente.</p>`;
+                }
+            } else { // This path is for quiz explanations or "Ask Gramatiquinho" where contentOrTopicId is already the HTML content
+                contentToDisplay = contentOrTopicId;
+            }
+
+            // A small delay to allow the spinner to be visible, then display content
+            setTimeout(() => {
+                studyText.innerHTML = contentToDisplay;
+                studyText.classList.remove('hidden'); // Show study text content
+                studyLoadingArea.classList.add('hidden'); // Hide spinner
+            }, 100); // A very short delay, just enough for the browser to render the spinner
+        }
+
+
+        function hideStudyModal() {
+            hideModal(studyModal);
+        }
+
+        async function askFriendsForHelp() {
+            if (friendsHelpCount > 0) {
+                friendsHelpCount--;
+                friendsHelpCountSpan.textContent = friendsHelpCount; // Atualiza o display imediatamente
+                askFriendsBtn.disabled = true;
+                askFriendsBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+                // Show loading spinner and text
+                quizContent.classList.add('hidden');
+                loadingArea.classList.remove('hidden'); // Show loading area
+
+                const currentQuestion = currentQuestions[currentQuestionIndex];
+                // Prompt revisado para ser mais conciso e objetivo
+                const prompt = `Explique de forma concisa e objetiva a resposta correta para a seguinte questão de gramática portuguesa: "${currentQuestion.question}" Opções: ${currentQuestion.options.join(', ')}. Resposta Correta: "${currentQuestion.options[currentQuestion.answer]}".`;
+
+                try {
+                    const explanation = await callGeminiApi(prompt, "text/plain");
+                    showStudyModal("Ajuda do Professor", explanation);
+                } catch (error) {
+                    console.error("Erro ao chamar a API Gemini:", error);
+                    showStudyModal("Ajuda do Professor", `Ocorreu um erro ao tentar obter a explicação. Detalhes: ${error.message}. Verifique sua conexão ou tente novamente.`);
+                } finally {
+                    // Hide loading spinner and text
+                    loadingArea.classList.add('hidden'); // Hide loading area
+                    quizContent.classList.remove('hidden');
+                }
+            } else {
+                showStudyModal("Sem Ajuda", "Você não tem mais ajudas disponíveis dos amigos.");
+            }
+        }
+
+        // --- Funções do Cronômetro ---
+        function startTimer() {
+            startTime = Date.now();
+            timerDisplay.textContent = "00:00";
+            if (timerInterval) clearInterval(timerInterval); // Clear any existing timer
+            timerInterval = setInterval(updateTimerDisplay, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function updateTimerDisplay() {
+            const elapsedTime = Date.now() - startTime;
+            const totalSeconds = Math.floor(elapsedTime / 1000);
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function formatTime(ms) {
+            const totalSeconds = Math.floor(ms / 1000);
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        // --- Funções do Modal de Recurso ---
+        function showAppealModal() {
+            appealTextArea.value = ''; // Limpa o textarea
+            appealResponseText.textContent = ''; // Limpa a resposta anterior
+            appealResponseContainer.classList.add('hidden'); // Esconde o container da resposta
+            appealResponseLoading.classList.add('hidden'); // Esconde o spinner
+            showModal(appealModal);
+        }
+
+        function hideAppealModal() {
+            hideModal(appealModal);
+        }
+
+        async function submitAppeal() {
+            const userAppeal = appealTextArea.value.trim();
+            if (!userAppeal) {
+                appealResponseText.textContent = "Por favor, digite seu recurso antes de enviar.";
+                appealResponseContainer.classList.remove('hidden');
+                return;
+            }
+
+            if (!currentQuestionData) {
+                appealResponseText.textContent = "Erro: Não há dados da questão atual para avaliar o recurso.";
+                appealResponseContainer.classList.remove('hidden');
+                return;
+            }
+
+            appealResponseContainer.classList.remove('hidden');
+            appealResponseLoading.classList.remove('hidden');
+            appealResponseText.textContent = ''; // Limpa o texto anterior
+
+            // Prompt revisado para ser mais conciso e objetivo
+            const prompt = `Avalie de forma concisa e objetiva o recurso do usuário para a questão de gramática portuguesa. Questão: "${currentQuestionData.question}". Opções: ${currentQuestionData.options.join(', ')}. Resposta Correta: "${currentQuestionData.options[currentQuestionData.answer]}". Recurso do Usuário: "${userAppeal}". O recurso procede? Explique.`;
+
+            try {
+                let evaluation = await callGeminiApi(prompt, "text/plain");
+                // Remove asterisks from the evaluation text
+                evaluation = evaluation.replace(/\*/g, '');
+                appealResponseText.innerHTML = evaluation;
+            } catch (error) {
+                console.error("Erro ao chamar a API Gemini para avaliar recurso:", error);
+                appealResponseText.textContent = `Ocorreu um erro ao tentar avaliar o recurso. Detalhes: ${error.message}. Verifique sua conexão ou tente novamente.`;
+            } finally {
+                appealResponseLoading.classList.add('hidden');
+            }
+        }
+
+        // --- Funções do Modal de Senha ---
+        function showPasswordModal(action) {
+            pendingAction = action;
+            adminPasswordInput.value = ''; // Clear previous input
+            passwordErrorMessage.classList.add('hidden'); // Hide error message
+            showModal(passwordModal);
+        }
+
+        function hidePasswordModal() {
+            hideModal(passwordModal);
+        }
+
+        function performRestartQuiz() {
+            startQuiz(isSimulado, selectedTopicQuantities); // Reinicia o quiz mantendo o modo atual (normal ou simulado)
+        }
+
+        function performBackToMenuFinal() {
+            selectedTopics = []; // Clear selected topics
+            loadTopics(isSimulado); // Re-render topics to clear selection and restore quantity
+            showScreen(isSimulado ? simuladoSetupScreen : topicSelectionScreen);
+        }
+
+        function performBackToHomeFromFinal() {
+            selectedTopics = []; // Clear selected topics
+            loadTopics(false); // Sempre carrega tópicos para o modo normal ao voltar para home
+            showScreen(homeScreen);
+        }
+
+        // --- Funções do Novo Modal de Distribuição de Questões ---
+        function showQuestionDistributionModal() {
+            questionDistributionContainer.innerHTML = '';
+            expectedTotalQuestionsSpan.textContent = savedQuestionQuantity;
+            distributionErrorMessage.classList.add('hidden');
+            selectedTopicQuantities = {}; // Reset quantities
+
+            const numTopics = selectedTopics.length;
+            let remainingQuestions = savedQuestionQuantity;
+            let baseQuestionsPerTopic = numTopics > 0 ? Math.floor(savedQuestionQuantity / numTopics) : 0;
+
+            selectedTopics.forEach((topicId, index) => {
+                const topic = grammarData.flatMap(cat => cat.topics).find(t => t.id === topicId);
+                if (!topic) return;
+
+                const topicName = topic.name;
+                const initialQuantity = baseQuestionsPerTopic; // Default to even distribution
+
+                const topicDiv = document.createElement('div');
+                topicDiv.className = 'flex justify-between items-center bg-slate-50 p-3 rounded-lg border border-slate-200';
+                topicDiv.innerHTML = `
+                    <span class="font-medium text-slate-700">${topicName}:</span>
+                    <input type="number" data-topic-id="${topicId}" value="${initialQuantity}" min="0" class="w-20 p-2 border border-slate-300 rounded-lg text-center question-input">
+                `;
+                questionDistributionContainer.appendChild(topicDiv);
+                
+                selectedTopicQuantities[topicId] = initialQuantity; // Initialize for calculation
+            });
+
+            // Distribute any remainder to the first topics
+            let currentSum = Object.values(selectedTopicQuantities).reduce((sum, val) => sum + val, 0);
+            let diff = savedQuestionQuantity - currentSum;
+            for (let i = 0; i < diff; i++) {
+                if (selectedTopics[i]) {
+                    selectedTopicQuantities[selectedTopics[i]]++;
+                    const inputElement = questionDistributionContainer.querySelector(`input[data-topic-id="${selectedTopics[i]}"]`);
+                    if (inputElement) {
+                        inputElement.value = selectedTopicQuantities[selectedTopics[i]];
+                    }
+                }
+            }
+
+            updateDistributionTotal();
+            showModal(questionDistributionModal);
+        }
+
+        function updateDistributionTotal() {
+            let currentTotal = 0;
+            const inputs = questionDistributionContainer.querySelectorAll('.question-input');
+            inputs.forEach(input => {
+                const value = parseInt(input.value) || 0;
+                currentTotal += value;
+                selectedTopicQuantities[input.dataset.topicId] = value;
+            });
+            distributionTotalDisplay.textContent = currentTotal;
+
+            if (currentTotal === savedQuestionQuantity) {
+                confirmDistributionBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                confirmDistributionBtn.disabled = false;
+                distributionErrorMessage.classList.add('hidden');
+            } else {
+                confirmDistributionBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                confirmDistributionBtn.disabled = true;
+                distributionErrorMessage.classList.remove('hidden');
+            }
+        }
+
+        function randomizeQuestionDistribution() {
+            let tempQuantities = {};
+            let remaining = savedQuestionQuantity;
+            const numTopics = selectedTopics.length;
+
+            if (numTopics === 0) return;
+
+            // Ensure at least 1 question per topic initially
+            selectedTopics.forEach(topicId => {
+                tempQuantities[topicId] = 1;
+                remaining--;
+            });
+
+            // Distribute the rest randomly
+            while (remaining > 0) {
+                const randomIndex = Math.floor(Math.random() * numTopics);
+                const topicId = selectedTopics[randomIndex];
+                tempQuantities[topicId]++;
+                remaining--;
+            }
+
+            // Update input fields and selectedTopicQuantities
+            const inputs = questionDistributionContainer.querySelectorAll('.question-input');
+            inputs.forEach(input => {
+                const topicId = input.dataset.topicId;
+                input.value = tempQuantities[topicId];
+                selectedTopicQuantities[topicId] = tempQuantities[topicId];
+            });
+
+            updateDistributionTotal();
+        }
+
+        function confirmQuestionDistribution() { // Renamed from confirmDistribution
+            const currentTotal = parseInt(distributionTotalDisplay.textContent);
+            if (currentTotal === savedQuestionQuantity) {
+                hideModal(questionDistributionModal);
+                startQuiz(true, selectedTopicQuantities); // Passa a distribuição para startQuiz
+            } else {
+                distributionErrorMessage.classList.remove('hidden');
+            }
+        }
+
+        // --- Funções do Relatório de Desempenho ---
+        function showPerformanceReport() {
+            performanceReportContent.innerHTML = ''; // Limpa o conteúdo anterior
+
+            const allTopicNames = {};
+            grammarData.forEach(category => {
+                category.topics.forEach(topic => {
+                    allTopicNames[topic.id] = topic.name;
+                });
+            });
+
+            let reportHtml = '<ul class="list-disc pl-5">';
+            for (const topicId in topicPerformance) {
+                const data = topicPerformance[topicId];
+                const topicName = allTopicNames[topicId] || `Tópico Desconhecido (${topicId})`;
+                reportHtml += `<li><strong>${topicName}:</strong> ${data.total} questões, ${data.correct} acertos.`; // Alterado para "X questões Y acertos"
+                if (data.total > 0 && data.correct < data.total) {
+                    reportHtml += ` <span class="text-red-600">(Erros: ${data.total - data.correct})</span>`;
+                } else if (data.total > 0 && data.correct === data.total) {
+                    reportHtml += ` <span class="text-green-600">(100% Acerto!)</span>`;
+                }
+                reportHtml += `</li>`;
+            }
+            reportHtml += '</ul>';
+
+            performanceReportContent.innerHTML = reportHtml;
+            showModal(performanceReportModal);
+        }
+
+        function hidePerformanceReport() {
+            hideModal(performanceReportModal);
+        }
+
+
+        // --- EVENT LISTENERS ---
+        levelSelectButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                levelSelectButtons.forEach(btn => {
+                    btn.classList.remove('border-2', 'border-sky-500');
+                    // Reset background colors to original shades
+                    if (btn.dataset.level.endsWith('EF')) {
+                        btn.classList.remove('bg-blue-700');
+                        btn.classList.add('bg-blue-500');
+                    } else if (btn.dataset.level.endsWith('EM')) {
+                        btn.classList.remove('bg-purple-700');
+                        btn.classList.add('bg-purple-500');
+                    } else if (btn.dataset.level === 'enem') { // Alterado de 'concurseiro'
+                        btn.classList.remove('bg-green-700');
+                        btn.classList.add('bg-green-500');
+                    }
+                });
+                
+                button.classList.add('border-2', 'border-sky-500'); // Add highlight
+                
+                // Set specific darker color for selected button
+                if (button.dataset.level.endsWith('EF')) {
+                    button.classList.remove('bg-blue-500');
+                    button.classList.add('bg-blue-700');
+                } else if (button.dataset.level.endsWith('EM')) {
+                    button.classList.remove('bg-purple-500');
+                    button.classList.add('bg-purple-700');
+                } else if (button.dataset.level === 'enem') { // Alterado de 'concurseiro'
+                    button.classList.remove('bg-green-500');
+                    button.classList.add('bg-green-700');
+                }
+
+                selectedLevel = button.dataset.level;
+                enterAppBtn.disabled = false;
+                enterAppBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            });
+        });
+
+        enterAppBtn.addEventListener('click', () => {
+            if (!selectedLevel) {
+                showStudyModal("Erro", "Por favor, selecione um nível antes de continuar.");
+                return;
+            }
+            // Inicia o contexto de áudio do Tone.js na primeira interação do usuário
+            if (Tone.context.state !== 'running') {
+                Tone.start();
+            }
+
+            if (selectedLevel === 'enem') { // Alterado de 'concurseiro'
+                showScreen(simuladoSetupScreen);
+                loadTopics(true); // Carrega tópicos no contexto de simulado
+            } else {
+                showScreen(topicSelectionScreen);
+                loadTopics(false); // Carrega tópicos no contexto de quiz normal
+            }
+        });
+
+        // Event listeners para os radio buttons de dificuldade
+        difficultyRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                selectedDifficulty = radio.value;
+                // Atualiza o estilo dos labels para indicar o selecionado
+                difficultyLabels.forEach(label => {
+                    label.classList.remove('selected'); // Remove de todos
+                });
+                document.querySelector(`label[for="${radio.id}"]`).classList.add('selected'); // Adiciona ao selecionado
+                updateStartQuizButtonState(true); // Atualiza o estado do botão Iniciar Simulado
+            });
+        });
+
+        startSelectedQuizBtn.addEventListener('click', () => startQuiz(false)); // Inicia quiz normal
+        
+        // Modificado para abrir o modal de distribuição
+        startSimuladoBtn.addEventListener('click', () => {
+            if (selectedTopics.length === 0) {
+                showStudyModal("Erro", "Por favor, selecione pelo menos um tópico para iniciar o simulado.");
+                return;
+            }
+            if (!selectedDifficulty) {
+                showStudyModal("Erro", "Por favor, selecione um nível de dificuldade para o simulado.");
+                return;
+            }
+            savedQuestionQuantity = parseInt(questionQuantitySimuladoInput.value);
+            showQuestionDistributionModal();
+        });
+
+        backToHomeFromTopicsBtn.addEventListener('click', () => {
+            selectedTopics = []; // Clear selected topics
+            loadTopics(false); // Re-render topics to clear selection and restore quantity
+            showScreen(homeScreen);
+        });
+
+        backToHomeFromSimuladoSetupBtn.addEventListener('click', () => {
+            selectedTopics = []; // Clear selected topics
+            loadTopics(false); // Re-render topics to clear selection and restore quantity
+            showScreen(homeScreen);
+        });
+
+        nextQuestionBtn.addEventListener('click', () => {
+            currentQuestionIndex++;
+            displayQuestion();
+        });
+
+        backToMenuBtn.addEventListener('click', () => {
+            stopTimer(); // Para o timer ao voltar para o menu
+            selectedTopics = []; // Clear selected topics
+            loadTopics(isSimulado); // Re-render topics to clear selection and restore quantity
+            showScreen(isSimulado ? simuladoSetupScreen : topicSelectionScreen);
+        });
+
+        restartQuizBtn.addEventListener('click', () => {
+            if (selectedLevel === 'enem') { // Alterado de 'concurseiro'
+                performRestartQuiz();
+            } else {
+                showPasswordModal('restart');
+            }
+        });
+
+        backToMenuFinalBtn.addEventListener('click', () => {
+            if (selectedLevel === 'enem') { // Alterado de 'concurseiro'
+                performBackToMenuFinal();
+            } else {
+                showPasswordModal('backToMenu');
+            }
+        });
+
+        // Novo event listener para o botão "Voltar à Tela Inicial" na tela final
+        backToHomeFromFinalBtn.addEventListener('click', () => {
+            if (selectedLevel === 'enem') { // Alterado de 'concurseiro'
+                performBackToHomeFromFinal();
+            } else {
+                showPasswordModal('backToHome');
+            }
+        });
+
+        closeStudyModalBtn.addEventListener('click', hideStudyModal); 
+        
+        askFriendsBtn.addEventListener('click', askFriendsForHelp);
+        appealQuestionBtn.addEventListener('click', showAppealModal); 
+        submitAppealBtn.addEventListener('click', submitAppeal); 
+        closeAppealModalBtn.addEventListener('click', hideAppealModal); 
+
+        // Event listener para o botão de mudo
+        muteButton.addEventListener('click', () => {
+            isMuted = !isMuted;
+            if (isMuted) {
+                unmuteIcon.classList.add('hidden');
+                muteIcon.classList.remove('hidden');
+            } else {
+                unmuteIcon.classList.remove('hidden');
+                muteIcon.classList.add('hidden');
+            }
+        });
+
+        confirmPasswordBtn.addEventListener('click', () => {
+            if (adminPasswordInput.value === ADMIN_PASSWORD) {
+                passwordErrorMessage.classList.add('hidden');
+                hidePasswordModal();
+                if (pendingAction === 'restart') {
+                    performRestartQuiz();
+                } else if (pendingAction === 'backToMenu') {
+                    performBackToMenuFinal();
+                } else if (pendingAction === 'backToHome') {
+                    performBackToHomeFromFinal();
+                }
+            } else {
+                passwordErrorMessage.classList.remove('hidden');
+            }
+        });
+
+        cancelPasswordBtn.addEventListener('click', hidePasswordModal);
+
+        // Event listeners para o novo modal de distribuição de questões
+        randomizeDistributionBtn.addEventListener('click', randomizeQuestionDistribution);
+        confirmDistributionBtn.addEventListener('click', confirmQuestionDistribution); 
+        cancelDistributionBtn.addEventListener('click', () => hideModal(questionDistributionModal));
+        questionDistributionContainer.addEventListener('input', (event) => {
+            if (event.target.classList.contains('question-input')) {
+                updateDistributionTotal();
+            }
+        });
+
+        // Event listener para fechar o modal de relatório de desempenho
+        closeReportModalBtn.addEventListener('click', hidePerformanceReport);
+
+        // Initial screen display
+        showScreen(homeScreen);
+    });
+    </script>
+</body>
+</html>
