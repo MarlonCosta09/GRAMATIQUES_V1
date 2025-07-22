@@ -1180,7 +1180,7 @@
                             responseSchema: responseSchema
                         }
                     };
-                    const apiKey = "YOUR_GEMINI_API_KEY"; // Substitua pela sua chave de API Gemini
+                    const apiKey = "AIzaSyB7qiadkipn35zzci0NwjZJUPsXS3q5rf8"; // Substitua pela sua chave de API Gemini
                     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                     const response = await fetch(apiUrl, {
@@ -1309,7 +1309,7 @@
             try {
                 const prompt = `Explique detalhadamente por que a resposta correta para a questão '${questionData.question}' é '${questionData.correctAnswer}'. Se o usuário escolheu '${selectedText}' como resposta, explique também por que '${selectedText}' está incorreta. Mantenha a explicação didática e clara, adequada ao nível ${currentLevel}.`;
                 const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
-                const apiKey = "YOUR_GEMINI_API_KEY"; // Substitua pela sua chave de API Gemini
+                const apiKey = "AIzaSyB7qiadkipn35zzci0NwjZJUPsXS3q5rf8"; // Substitua pela sua chave de API Gemini
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                 const response = await fetch(apiUrl, {
@@ -1507,7 +1507,7 @@
             try {
                 const prompt = `Avalie o seguinte recurso de questão de gramática portuguesa. A questão era: "${currentQuestionData.question}". As opções eram: ${currentQuestionData.options.join(', ')}. A resposta correta oficial era: "${currentQuestionData.correctAnswer}". O usuário argumentou: "${userAppeal}". Com base nas regras da gramática portuguesa, o recurso do usuário é válido? Justifique sua resposta de forma clara e concisa.`;
                 const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
-                const apiKey = "YOUR_GEMINI_API_KEY"; // Substitua pela sua chave de API Gemini
+                const apiKey = "AIzaSyB7qiadkipn35zzci0NwjZJUPsXS3q5rf8"; // Substitua pela sua chave de API Gemini
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                 const response = await fetch(apiUrl, {
