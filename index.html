@@ -18,34 +18,37 @@
         }
         .option-btn {
             transition: all 0.2s ease-in-out;
-            /* Novos estilos para os botões de opção */
             background-color: #e0f7fa; /* light-blue-50 */
             border-color: #81d4fa; /* light-blue-200 */
             color: #006064; /* deep-teal-800 */
+            border-width: 2px; /* Adicionado para borda mais visível */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Sombra sutil */
         }
         .option-btn:hover {
             background-color: #b2ebf2; /* light-blue-100 */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Sombra mais pronunciada no hover */
+            transform: translateY(-1px); /* Leve elevação no hover */
         }
         .correct {
             background-color: #22c55e !important; /* green-500 */
             color: white !important;
-            border-color: #16a34a; /* green-600 */
+            border-color: #16a34a !important; /* green-600 */
             transform: scale(1.02);
+            box-shadow: 0 4px 8px rgba(34, 197, 94, 0.3) !important; /* Sombra verde */
         }
         .incorrect {
             background-color: #ef4444 !important; /* red-500 */
             color: white !important;
-            border-color: #dc2626; /* red-600 */
+            border-color: #dc2626 !important; /* red-600 */
+            box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3) !important; /* Sombra vermelha */
         }
         .disabled {
             pointer-events: none;
-            opacity: 0.9;
+            opacity: 0.7; /* Ligeiramente mais opaco para indicar desabilitado */
         }
         .topic-card {
             page-break-inside: avoid;
             break-inside: avoid;
-            /* Novos estilos para os cartões de tópico */
             border-left: 8px solid #0ea5e9; /* sky-500 */
             transition: all 0.2s ease-in-out;
         }
@@ -67,9 +70,8 @@
         }
         .modal-container {
             transition: all 0.3s ease;
-            /* Ajustes para o tamanho e rolagem dos modais */
-            max-height: 90vh; /* Limita a altura máxima para caber na tela */
-            overflow-y: auto; /* Adiciona rolagem vertical se o conteúdo exceder a altura */
+            max-height: 90vh;
+            overflow-y: auto;
         }
         /* Estilos para o spinner */
         .spinner {
@@ -87,20 +89,20 @@
         /* Estilo para o popup de informações */
         .info-popup {
             position: absolute;
-            bottom: 1.5rem; /* Ajustado para descer mais */
-            right: 0.5rem; /* Mantido no canto direito */
+            bottom: 1.5rem;
+            right: 0.5rem;
             background-color: #fff;
-            padding: 0.6rem 0.8rem; /* Reduzido em aproximadamente 20% */
+            padding: 0.6rem 0.8rem;
             border-radius: 0.5rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            font-size: 0.7rem; /* Reduzido em aproximadamente 20% */
+            font-size: 0.7rem;
             color: #475569; /* slate-600 */
-            z-index: 50; /* Garante que fique acima de outros elementos */
+            z-index: 50;
         }
         /* Ajuste para a tela inicial para permitir posicionamento absoluto do popup */
         #home-screen {
-            position: relative; /* Necessário para posicionar o popup absolutamente dentro dela */
-            overflow: hidden; /* Para garantir que o fundo de texto não vaze */
+            position: relative;
+            overflow: hidden;
         }
         /* Estilo para o fundo de texto transparente */
         .text-background-overlay {
@@ -109,22 +111,22 @@
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none; /* Permite cliques nos elementos abaixo */
-            z-index: 1; /* Garante que fique atrás do conteúdo principal */
-            color: rgba(200, 200, 200, 0.15); /* Cinza muito claro com mais transparência */
-            font-size: 1.8rem; /* Ligeiramente maior */
+            pointer-events: none;
+            z-index: 1;
+            color: rgba(200, 200, 200, 0.15);
+            font-size: 1.8rem;
             line-height: 1.8;
             text-align: center;
             overflow: hidden;
             word-break: break-all;
-            white-space: pre-wrap; /* Preserva espaços em branco e quebras de linha */
-            user-select: none; /* Impede seleção de texto */
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05); /* Sombra sutil para efeito 3D */
+            white-space: pre-wrap;
+            user-select: none;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
             background-image: repeating-linear-gradient(
                 45deg,
                 transparent,
                 transparent 100px,
-                rgba(220, 220, 220, 0.05) 100px, /* Ajuste para mais transparência no gradiente também */
+                rgba(220, 220, 220, 0.05) 100px,
                 rgba(220, 220, 220, 0.05) 200px
             );
         }
@@ -145,7 +147,7 @@
         /* Estilo para o iframe do YouTube */
         .video-responsive {
             position: relative;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            padding-bottom: 56.25%;
             height: 0;
             overflow: hidden;
             max-width: 100%;
@@ -161,7 +163,7 @@
             border: 0;
         }
         .difficulty-label.selected,
-        .response-mode-label.selected { /* Adicionado para o modo de resposta */
+        .response-mode-label.selected {
             background-color: #3b82f6; /* blue-500 */
             color: white;
             border-color: #3b82f6;
@@ -169,10 +171,10 @@
 
         /* Estilos para a Tela Final */
         #final-screen {
-            background: linear-gradient(to bottom right, #e0f2fe, #bbdefb); /* Gradiente azul claro */
-            border-radius: 1.5rem; /* Cantos mais arredondados */
-            padding: 3rem; /* Mais padding */
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* Sombra mais pronunciada */
+            background: linear-gradient(to bottom right, #e0f2fe, #bbdefb);
+            border-radius: 1.5rem;
+            padding: 3rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
             animation: fadeInScale 0.5s ease-out forwards;
         }
 
@@ -188,40 +190,40 @@
         }
 
         #final-screen h2 {
-            color: #1e40af; /* Azul mais escuro */
-            font-size: 3.5rem; /* Título maior */
+            color: #1e40af;
+            font-size: 3.5rem;
             margin-bottom: 1rem;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         #final-screen #final-topic {
-            color: #1d4ed8; /* Azul médio */
+            color: #1d4ed8;
             font-size: 1.75rem;
             margin-bottom: 1.5rem;
         }
 
         #final-screen .text-lg.text-slate-600 {
-            color: #475569; /* Cinza slate */
+            color: #475569;
             font-weight: 500;
         }
 
         #final-screen #final-score {
-            color: #059669; /* Verde esmeralda */
-            font-size: 7rem; /* Pontuação gigante */
+            color: #059669;
+            font-size: 7rem;
             font-weight: 800;
             margin-bottom: 2rem;
             text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
         }
 
         #final-screen #final-time {
-            color: #64748b; /* Cinza mais escuro */
+            color: #64748b;
             font-size: 1.25rem;
             margin-bottom: 2.5rem;
         }
 
         #final-screen .flex button {
             padding: 1rem 2rem;
-            border-radius: 9999px; /* Botões completamente arredondados */
+            border-radius: 9999px;
             font-size: 1.1rem;
             font-weight: 700;
             transition: all 0.3s ease;
@@ -229,7 +231,7 @@
         }
 
         #final-screen #restart-quiz {
-            background-color: #2563eb; /* Azul vibrante */
+            background-color: #2563eb;
             color: white;
             border: 2px solid #1d4ed8;
         }
@@ -241,7 +243,7 @@
 
         #final-screen #back-to-menu-final,
         #final-screen #back-to-home-from-final {
-            background-color: #cbd5e1; /* Cinza mais claro */
+            background-color: #cbd5e1;
             color: #334155;
             border: 2px solid #94a3b8;
         }
@@ -255,28 +257,28 @@
 
         /* Novo estilo para o modal de texto */
         .text-modal-content {
-            background-color: #fff; /* Fundo branco */
-            border: 1px solid #e0e0e0; /* Borda sutil */
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
             border-radius: 8px;
             padding: 1.5rem;
             line-height: 1.6;
             font-size: 1rem;
             color: #333;
-            max-height: 70vh; /* Altura máxima para rolagem */
-            overflow-y: auto; /* Habilita a rolagem vertical */
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.05); /* Sombra interna sutil */
+            max-height: 70vh;
+            overflow-y: auto;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
             position: relative;
-            background-image: linear-gradient(to bottom, #f9f9f9 1px, transparent 1px); /* Linhas de caderno */
-            background-size: 100% 1.8em; /* Altura da linha */
+            background-image: linear-gradient(to bottom, #f9f9f9 1px, transparent 1px);
+            background-size: 100% 1.8em;
         }
         .text-modal-content::before {
             content: '';
             position: absolute;
             top: 0;
-            left: 40px; /* Margem esquerda para a linha vertical */
+            left: 40px;
             bottom: 0;
             width: 1px;
-            background-color: rgba(255, 0, 0, 0.2); /* Linha vertical vermelha clara */
+            background-color: rgba(255, 0, 0, 0.2);
         }
     </style>
 </head>
@@ -403,7 +405,7 @@
                 <button id="back-to-home-from-simulado-setup" class="bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold py-3 px-6 rounded-lg transition-colors">
                     Voltar para o Início
                 </button>
-            </div>
+            </footer>
         </div>
 
         <!-- Tela do Quiz -->
@@ -700,9 +702,11 @@
         let isSimulado = false;
         let timerInterval = null;
         let timeLeft = 0;
-        let friendsHelpCount = 3; // Reset to default value as persistence is removed
+        let friendsHelpCount = 3;
         let performanceReport = {};
         let currentQuestionData = null;
+        const ADMIN_PASSWORD = "wpm2025"; // Senha de administrador
+        let passwordSuccessCallback = null; // Callback para ser executado após a senha correta
 
         // --- Elementos do DOM ---
         const homeScreen = document.getElementById('home-screen');
@@ -1043,7 +1047,8 @@
             try {
                 const prompt = `Gere um material de estudo detalhado e didático sobre o tópico de gramática portuguesa "${topicName}" para o nível ${currentLevel}. Inclua exemplos claros e, se possível, um pequeno exercício com gabarito. Formate a resposta usando Markdown para facilitar a leitura.`;
                 const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
-                const apiKey = "AIzaSyB7qiadkipn35zzci0NwjZJUPsXS3q5rf8"; // Substitua pela sua chave de API Gemini
+                // A chave da API deve ser definida aqui. Substitua "YOUR_GEMINI_API_KEY" pela sua chave real.
+                const apiKey = "AIzaSyB7qiadkipn35zzci0NwjZJUPsXS3q5rf8"; 
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                 const response = await fetch(apiUrl, {
@@ -1051,6 +1056,10 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
+
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP: ${response.status} - ${response.statusText}`);
+                }
 
                 const result = await response.json();
                 if (result.candidates && result.candidates.length > 0 && result.candidates[0].content && result.candidates[0].content.parts && result.candidates[0].content.parts.length > 0) {
@@ -1076,7 +1085,7 @@
                 }
             } catch (error) {
                 console.error('Erro ao carregar material de estudo:', error);
-                studyText.textContent = 'Ocorreu um erro ao carregar o material de estudo. Por favor, tente novamente mais tarde.';
+                studyText.textContent = `Ocorreu um erro ao carregar o material de estudo: ${error.message}. Por favor, tente novamente mais tarde.`;
                 studyText.classList.remove('hidden');
             } finally {
                 studyLoadingArea.classList.add('hidden');
@@ -1180,7 +1189,8 @@
                             responseSchema: responseSchema
                         }
                     };
-                    const apiKey = "AIzaSyB7qiadkipn35zzci0NwjZJUPsXS3q5rf8"; // Substitua pela sua chave de API Gemini
+                    // A chave da API foi substituída aqui.
+                    const apiKey = "AIzaSyB7qiadkipn35zzci0NwjZJUPsXS3q5rf8"; 
                     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                     const response = await fetch(apiUrl, {
@@ -1188,6 +1198,10 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     });
+
+                    if (!response.ok) {
+                        throw new Error(`Erro HTTP: ${response.status} - ${response.statusText}`);
+                    }
 
                     const result = await response.json();
                     if (result.candidates && result.candidates.length > 0 && result.candidates[0].content && result.candidates[0].content.parts && result.candidates[0].content.parts.length > 0) {
@@ -1217,6 +1231,15 @@
 
             } catch (error) {
                 console.error('Erro ao gerar questões:', error);
+                // Exibe uma mensagem mais amigável para o usuário
+                const questionTextElement = document.getElementById('question-text');
+                if (questionTextElement) {
+                    questionTextElement.innerHTML = `Não foi possível carregar as questões. Por favor, verifique a sua chave de API Gemini e a sua conexão com a internet. Detalhes do erro: ${error.message}`;
+                }
+                const optionsContainerElement = document.getElementById('options-container');
+                if (optionsContainerElement) {
+                    optionsContainerElement.innerHTML = ''; // Limpa as opções
+                }
                 return [];
             } finally {
                 if (loadingArea) loadingArea.classList.add('hidden');
@@ -1309,7 +1332,7 @@
             try {
                 const prompt = `Explique detalhadamente por que a resposta correta para a questão '${questionData.question}' é '${questionData.correctAnswer}'. Se o usuário escolheu '${selectedText}' como resposta, explique também por que '${selectedText}' está incorreta. Mantenha a explicação didática e clara, adequada ao nível ${currentLevel}.`;
                 const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
-                const apiKey = "AIzaSyB7qiadkipn35zzci0NwjZJUPsXS3q5rf8"; // Substitua pela sua chave de API Gemini
+                const apiKey = "AIzaSyB7qiadkipn35zzci0NwjZJUPsXS3q5rf8"; // A chave da API foi substituída aqui.
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                 const response = await fetch(apiUrl, {
@@ -1317,6 +1340,10 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
+
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP: ${response.status} - ${response.statusText}`);
+                }
 
                 const result = await response.json();
                 if (result.candidates && result.candidates.length > 0 && result.candidates[0].content && result.candidates[0].content.parts && result.candidates[0].content.parts.length > 0) {
@@ -1340,7 +1367,7 @@
                 }
             } catch (error) {
                 console.error('Erro ao carregar explicação:', error);
-                studyText.textContent = 'Ocorreu um erro ao carregar a explicação. Por favor, tente novamente mais tarde.';
+                studyText.textContent = `Ocorreu um erro ao carregar a explicação: ${error.message}. Por favor, tente novamente mais tarde.`;
                 studyText.classList.remove('hidden');
             } finally {
                 studyLoadingArea.classList.add('hidden');
@@ -1507,7 +1534,7 @@
             try {
                 const prompt = `Avalie o seguinte recurso de questão de gramática portuguesa. A questão era: "${currentQuestionData.question}". As opções eram: ${currentQuestionData.options.join(', ')}. A resposta correta oficial era: "${currentQuestionData.correctAnswer}". O usuário argumentou: "${userAppeal}". Com base nas regras da gramática portuguesa, o recurso do usuário é válido? Justifique sua resposta de forma clara e concisa.`;
                 const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
-                const apiKey = "AIzaSyB7qiadkipn35zzci0NwjZJUPsXS3q5rf8"; // Substitua pela sua chave de API Gemini
+                const apiKey = "AIzaSyB7qiadkipn35zzci0NwjZJUPsXS3q5rf8"; // A chave da API foi substituída aqui.
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                 const response = await fetch(apiUrl, {
@@ -1515,6 +1542,10 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
+
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP: ${response.status} - ${response.statusText}`);
+                }
 
                 const result = await response.json();
                 if (result.candidates && result.candidates.length > 0 && result.candidates[0].content && result.candidates[0].content.parts && result.candidates[0].content.parts.length > 0) {
@@ -1524,7 +1555,7 @@
                 }
             } catch (error) {
                 console.error('Erro ao enviar recurso:', error);
-                appealResponseText.textContent = 'Ocorreu um erro ao avaliar o recurso. Por favor, tente novamente mais tarde.';
+                appealResponseText.textContent = `Ocorreu um erro ao avaliar o recurso: ${error.message}. Por favor, tente novamente mais tarde.`;
             } finally {
                 appealResponseLoading.classList.add('hidden');
             }
@@ -1664,6 +1695,42 @@
          */
         function closeTextModal() {
             closeModal(textModal);
+        }
+
+        /**
+         * Abre o modal de senha.
+         * @param {Function} callbackOnSuccess - Função a ser executada se a senha estiver correta.
+         */
+        function openPasswordModal(callbackOnSuccess) {
+            adminPasswordInput.value = '';
+            passwordErrorMessage.classList.add('hidden');
+            passwordSuccessCallback = callbackOnSuccess; // Armazena o callback
+            openModal(passwordModal);
+        }
+
+        /**
+         * Verifica a senha inserida no modal.
+         */
+        function checkPassword() {
+            const enteredPassword = adminPasswordInput.value;
+            if (enteredPassword === ADMIN_PASSWORD) {
+                passwordErrorMessage.classList.add('hidden');
+                closeModal(passwordModal);
+                if (passwordSuccessCallback) {
+                    passwordSuccessCallback(); // Executa o callback armazenado
+                    passwordSuccessCallback = null; // Limpa o callback após o uso
+                }
+            } else {
+                passwordErrorMessage.classList.remove('hidden');
+            }
+        }
+
+        /**
+         * Cancela a ação do modal de senha.
+         */
+        function cancelPasswordAction() {
+            closeModal(passwordModal);
+            passwordSuccessCallback = null; // Limpa o callback
         }
 
 
@@ -1900,9 +1967,27 @@
         });
 
         // Botões de voltar para a tela inicial
-        backToHomeFromTopicsButton.addEventListener('click', initializeAppUI);
-        backToHomeFromSimuladoSetupButton.addEventListener('click', initializeAppUI);
-        backToHomeFromFinalButton.addEventListener('click', initializeAppUI);
+        backToHomeFromTopicsButton.addEventListener('click', () => {
+            if (isSimulado) {
+                initializeAppUI(); // No password for ENEM mode
+            } else {
+                openPasswordModal(initializeAppUI);
+            }
+        });
+        backToHomeFromSimuladoSetupButton.addEventListener('click', () => {
+            if (isSimulado) {
+                initializeAppUI(); // No password for ENEM mode
+            } else {
+                openPasswordModal(initializeAppUI);
+            }
+        });
+        backToHomeFromFinalButton.addEventListener('click', () => {
+            if (isSimulado) {
+                initializeAppUI(); // No password for ENEM mode
+            } else {
+                openPasswordModal(initializeAppUI);
+            }
+        });
 
         // Botão "Próxima Pergunta"
         nextQuestionButton.addEventListener('click', nextQuestion);
@@ -1913,7 +1998,7 @@
             if (isSimulado) {
                 showScreen(simuladoSetupScreen);
             } else {
-                showScreen(topicSelectionScreen);
+                openPasswordModal(() => showScreen(topicSelectionScreen));
             }
         });
 
@@ -1925,7 +2010,7 @@
             if (isSimulado) {
                 showScreen(simuladoSetupScreen);
             } else {
-                showScreen(topicSelectionScreen);
+                openPasswordModal(() => showScreen(topicSelectionScreen));
             }
         });
 
@@ -1937,10 +2022,12 @@
                     friendsHelpCountSpan.textContent = friendsHelpCount;
                     await openStudyModal('current-question-help', `Ajuda sobre a Questão Atual: ${currentQuestionData.question}`, 'Ajuda:');
                 } else {
-                    alert('Não há questão ativa para pedir ajuda.'); // Idealmente um modal customizado
+                    // Substituído alert por um modal customizado ou feedback na tela se necessário
+                    console.log('Não há questão ativa para pedir ajuda.');
                 }
             } else {
-                alert('Você não tem mais ajudas do Gramatiquinho!'); // Idealmente um modal customizado
+                // Substituído alert por um modal customizado ou feedback na tela se necessário
+                console.log('Você não tem mais ajudas do Gramatiquinho!');
             }
         });
 
@@ -1975,6 +2062,15 @@
             }
         });
         closeTextModalButton.addEventListener('click', closeTextModal);
+
+        // Event Listeners para o Modal de Senha
+        confirmPasswordButton.addEventListener('click', checkPassword);
+        cancelPasswordButton.addEventListener('click', cancelPasswordAction);
+        adminPasswordInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                checkPassword();
+            }
+        });
 
 
         // Inicializa o aplicativo ao carregar a página
