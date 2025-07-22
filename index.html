@@ -1132,21 +1132,27 @@
                 const result = await response.json();
                 if (result.candidates && result.candidates.length > 0 && result.candidates[0].content && result.candidates[0].content.parts && result.candidates[0].content.parts.length > 0) {
                     const markdownText = result.candidates[0].content.parts[0].text;
-                    // Simples conversão de Markdown para HTML básico.
-                    // Para uma conversão robusta, uma biblioteca de Markdown seria ideal.
-                    let htmlContent = markdownText
-                        .replace(/^### (.*$)/gim, '<h4>$1</h4>')
-                        .replace(/^## (.*$)/gim, '<h3>$1</h3>')
-                        .replace(/^# (.*$)/gim, '<h2>$1</h2>')
-                        .replace(/^\* (.*$)/gim, '<li>$1</li>')
-                        .replace(/^- (.*$)/gim, '<li>$1</li>')
-                        .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
-                        .replace(/\*(.*?)\*/gim, '<em>$1</em>')
-                        .replace(/`(.*?)`/gim, '<code>$1</code>')
-                        .replace(/\n/g, '<br>');
+                    
+                    if (markdownText.trim().length > 50) { // Verifica se o texto gerado é substancial
+                        // Simples conversão de Markdown para HTML básico.
+                        // Para uma conversão robusta, uma biblioteca de Markdown seria ideal.
+                        let htmlContent = markdownText
+                            .replace(/^### (.*$)/gim, '<h4>$1</h4>')
+                            .replace(/^## (.*$)/gim, '<h3>$1</h3>')
+                            .replace(/^# (.*$)/gim, '<h2>$1</h2>')
+                            .replace(/^\* (.*$)/gim, '<li>$1</li>')
+                            .replace(/^- (.*$)/gim, '<li>$1</li>')
+                            .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
+                            .replace(/\*(.*?)\*/gim, '<em>$1</em>')
+                            .replace(/`(.*?)`/gim, '<code>$1</code>')
+                            .replace(/\n/g, '<br>');
 
-                    studyText.innerHTML = htmlContent;
-                    studyText.classList.remove('hidden');
+                        studyText.innerHTML = htmlContent;
+                        studyText.classList.remove('hidden');
+                    } else {
+                        studyText.textContent = 'A IA não conseguiu gerar um material de estudo substancial para este tópico no momento. Por favor, tente novamente mais tarde ou selecione outro tópico.';
+                        studyText.classList.remove('hidden');
+                    }
                 } else {
                     studyText.textContent = 'Não foi possível carregar o material de estudo. Tente novamente.';
                     studyText.classList.remove('hidden');
